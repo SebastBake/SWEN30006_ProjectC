@@ -14,12 +14,12 @@ Trello: https://trello.com/b/TXyY6BX5/project-c
 5. Use new map information to update the graph or rebuild it.
 
 ### How to generate a path?
- * Only generate paths if:
-  1. New blocks are uncovered and the graph is updated
-  2. The car is stuck in a trap or trying to drive into a wall or something
- * A node might consist of:
-  * Links to all of the other possible nodes to drive to.
-  * some information about whether the node has been visited?
+* Only generate paths if:
+ 1. New blocks are uncovered and the graph is updated
+ 2. The car is stuck in a trap or trying to drive into a wall or something
+* A node might consist of:
+ * Links to all of the other possible nodes to drive to.
+ * some information about whether the node has been visited?
 ### Some things to think about:
 * How to avoid the car getting stuck in loops?
 * How should the car go from one node to another eg:
