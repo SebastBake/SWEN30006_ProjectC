@@ -6,7 +6,7 @@ Git Repo: https://github.com/SebastBake/SWEN30006_ProjectC
 Trello: https://trello.com/b/TXyY6BX5/project-c
 
 
-##Sebs strategy for navigating the maze
+## Sebs strategy for navigating the maze
 1. Generate a graph
 2. Use graph to generate possible paths
 3. Select the best path using a graph algorithm or some heuristic
