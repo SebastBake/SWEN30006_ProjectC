@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -8,6 +10,7 @@ import tiles.MapTile;
 import utilities.Coordinate;
 import utilities.PeekTuple;
 import world.Car;
+import world.World;
 import world.WorldSpatial;
 
 public abstract class CarController {
@@ -110,7 +113,23 @@ public abstract class CarController {
 	 * Returns the view around your car (this is a 3x3 area)
 	 */
 	public HashMap<Coordinate,MapTile> getView(){
+		printInfo();
 		return car.getView();
+	}
+	
+	/**
+	 * Logs the square as seen by the car
+	 */
+	public void printInfo() {
+		HashMap<Coordinate,MapTile> square = car.getView();
+		Iterator<Entry<Coordinate, MapTile>> it = square.entrySet().iterator();
+		System.out.println("Looking up car view...");
+		while (it.hasNext()) {
+			Entry<Coordinate, MapTile> pair = it.next();
+	        System.out.println(pair.getKey() + " = " + ((MapTile) pair.getValue()).getName());
+	        it.remove();
+	    }
+		
 	}
 	
 	/**
