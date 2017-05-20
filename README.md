@@ -5,3 +5,5 @@ Git Repo: https://github.com/SebastBake/SWEN30006_ProjectC
 
 Trello: https://trello.com/b/TXyY6BX5/project-c
 
+
+Sicheng was here
