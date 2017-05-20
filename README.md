@@ -15,8 +15,8 @@ Trello: https://trello.com/b/TXyY6BX5/project-c
 
 ### How to generate a path?
 * Only generate paths if:
- 1. New blocks are uncovered and the graph is updated
- 2. The car is stuck in a trap or trying to drive into a wall or something
+	1. New blocks are uncovered and the graph is updated
+	2. The car is stuck in a trap or trying to drive into a wall or something
 * A node might consist of:
  * Links to all of the other possible nodes to drive to.
  * some information about whether the node has been visited?
