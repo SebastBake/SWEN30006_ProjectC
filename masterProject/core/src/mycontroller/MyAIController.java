@@ -51,14 +51,53 @@ public class MyAIController extends CarController{
 		}
 		currentView = getView();
 	}
-	
-	public float getCarNodeOrientation(){
+		
+	/**
+	 * Change made
+	 * 
+	 * Originally, it was public float getCarNodeOrientation()
+	 * Originally, it was designed to get the angle of the car and the destination node
+	 * Since it's designed only to know if the destination is behind the car or not
+	 * We simply change it to an easier approach
+	 * 
+	 * Decide whether the destination is behind the car or not
+	 * 
+	 * @return if the destination is behind the car or not
+	 */
+	public boolean isDestinationBehind(){
 		Node destNode = pathList.get(pathList.size() - 1);
 		WorldSpatial.Direction direction = getOrientation();
-		
-		
+		Coordinate currentCoordinate = new Coordinate(getPosition());
+		Coordinate destCooridinate = destNode.getCoordinate();
+		switch(direction){
+		case NORTH:
+			if(currentCoordinate.y > destCooridinate.y){
+				return true;
+			}
+			break;
+		case SOUTH:
+			if(currentCoordinate.y < destCooridinate.y){
+				return true;
+			}
+			break;
+		case EAST:
+			if(currentCoordinate.x < destCooridinate.x){
+				return true;
+			}
+			break;
+		case WEST:
+			if(currentCoordinate.x > destCooridinate.x){
+				return true;
+			}
+			break;
+		}
+		return false;	
 	}
 	
+	/**
+	 *
+	 * @return if the car has hit the wall or not
+	 */
 	public boolean detectCollision(){
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
@@ -89,6 +128,10 @@ public class MyAIController extends CarController{
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @return if the car is at an edge of a grass trap
+	 */
 	public boolean detectGrassEdge(){
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
@@ -119,6 +162,10 @@ public class MyAIController extends CarController{
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @return the space for the car to make a turn
+	 */
 	public float getMaxSideSpace(){
 		WorldSpatial.Direction direction = getOrientation();
 		switch(direction){
