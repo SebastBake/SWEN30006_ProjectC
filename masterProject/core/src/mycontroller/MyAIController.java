@@ -31,18 +31,27 @@ public class MyAIController extends CarController{
 		
 	}
 	
+	/**
+	 * Update Driver
+	 * @param newDriver
+	 */
 	public void newDriver(Driver newDriver){
 		previousDriver = currentDriver;
 		currentDriver = newDriver;
 	}
 	
+	/**
+	 * Update currentTile
+	 */
 	private void updateCurrentTile(){
 		previousTile = currentTile;
 		Coordinate currentCoordinate = new Coordinate(getPosition());
 		currentTile = World.lookUp(currentCoordinate.x, currentCoordinate.y);
 	}
 	
-	
+	/**
+	 * Update currentView and previousViews
+	 */
 	private void updateCurrentView(){
 		if(previousViews == null){
 			previousViews = currentView;
@@ -168,10 +177,68 @@ public class MyAIController extends CarController{
 	 */
 	public float getMaxSideSpace(){
 		WorldSpatial.Direction direction = getOrientation();
+		Coordinate currentCoordinate = new Coordinate(getPosition());
+		float leftDist = 0;
+		float rightDist = 0;
 		switch(direction){
 		case NORTH:
-			
+			for(int i = 0; i < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x - i, currentCoordinate.y));
+				if(mapTile.getName().equals("Wall")){
+					leftDist = i;
+				}
+			}
+			for(int i = 0; i  < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x + i, currentCoordinate.y));
+				if(mapTile.getName().equals("Wall")){
+					rightDist = i;
+				}
+			}
+			break;
+		case SOUTH:
+			for(int i = 0; i < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x - i, currentCoordinate.y));
+				if(mapTile.getName().equals("Wall")){
+					rightDist = i;
+				}
+			}
+			for(int i = 0; i  < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x + i, currentCoordinate.y));
+				if(mapTile.getName().equals("Wall")){
+					leftDist = i;
+				}
+			}
+			break;
+		case EAST:
+			for(int i = 0; i < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x, currentCoordinate.y - i));
+				if(mapTile.getName().equals("Wall")){
+					leftDist = i;
+				}
+			}
+			for(int i = 0; i  < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x, currentCoordinate.y + i));
+				if(mapTile.getName().equals("Wall")){
+					rightDist = i;
+				}
+			}
+			break;
+		case WEST:
+			for(int i = 0; i < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x, currentCoordinate.y - i));
+				if(mapTile.getName().equals("Wall")){
+					rightDist = i;
+				}
+			}
+			for(int i = 0; i  < getViewSquare(); i++){
+				MapTile mapTile = currentView.get(new Coordinate(currentCoordinate.x, currentCoordinate.y + i));
+				if(mapTile.getName().equals("Wall")){
+					leftDist = i;
+				}
+			}
+			break;	
 		}
+		return leftDist + rightDist;
 	}
 	
 	
