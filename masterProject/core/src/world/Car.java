@@ -49,14 +49,14 @@ public class Car extends Sprite{
 
 
 
-	private static final float MAX_SPEED = 5f;
+	private static final float MAX_SPEED = 7;
 	private static final float MAX_REVERSE_SPEED = 2.5f;
 	private static final float ROTATING_FACTOR = 150f;
 	private static final float STEERING_ADJUST_FACTOR = 0.05f;
 	private static final float EPSILON = 0.01f;
 	private static final float TURN_EPSILON = 0.05f;
 	private static final float BRAKING_FORCE = 2f;
-	private static final float ACCELERATION = 2f;
+	private static final float ACCELERATION = 4;
 	private static final float MAX_DEGREES = 360;
 	private static final float FRICTION_FORCE = 0.5f;
 	private static final int SNAP_THRESHOLD = 5;

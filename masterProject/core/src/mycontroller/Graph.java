@@ -25,14 +25,17 @@ public class Graph {
 	}
 	
 	private Node generateBestDestination(){
+		return null;
 		
 	}
 	
 	private boolean feasibleVisit(Node fromNode, Node toNode){
+		return false;
 		
 	}
 	
 	private ArrayList<Node> getGraphNodesInView(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
+		return null;
 		
 	}
 	
@@ -170,6 +173,7 @@ public class Graph {
 	 * @return an ArrayList of MapTile representing all the MapTile that the line has
 	 */
 	private ArrayList<MapTile> lineOfSight(Coordinate c1, Coordinate c2){
+		return null;
 		
 	}
 	
