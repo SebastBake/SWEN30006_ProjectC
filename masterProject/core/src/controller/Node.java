@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import tiles.MapTile;
 import tiles.UtilityTile;
 import utilities.*;
+import world.World;
 
 public class Node {
 	
@@ -12,35 +13,25 @@ public class Node {
 	private MapTile tile;
 	private boolean unexplored;
 	private boolean exitTile;
-	private float travelCost;
+	private Float travelCost;
 	private ArrayList<Edge> edges;
 	private Node previous;
 	
 	/**
 	 * Initialize the Node, assigning travel cost
-	 * trap tile 20, wall tile 200, other tiles 1
 	 * @param coordinate
-	 * @param tile
 	 * @param unexplored
 	 */
-	public Node(Coordinate coordinate, MapTile tile, boolean unexplored){
+	public Node(Coordinate coordinate, boolean unexplored){
 		this.coordinate = coordinate;
-		this.tile = tile;
+		this.tile = World.lookUp(coordinate.x, coordinate.y);
 		this.unexplored = unexplored;
 		if(tile.getName().equals("Utility")){
 			if(((UtilityTile)tile).isExit()){
 				this.exitTile = true;
 			}
-		} else {
-			this.exitTile = false;
-			if(tile.getName().equals("Trap")){
-				travelCost = 20;
-			}else if(tile.getName().equals("Wall")){
-				travelCost = 200;
-			}else{
-				travelCost = 1;
-			}
 		}
+		travelCost = Float.MAX_VALUE;
 	}
 
 	public Coordinate getCoordinate(){

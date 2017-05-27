@@ -32,7 +32,6 @@ public class MyAIController extends CarController{
 		if (currentTile != previousTile) {
 			
 			updateViews();
-			graph.updateGraph(currentTile, currentView, previousViews);
 			
 			
 		}
