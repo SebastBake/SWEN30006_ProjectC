@@ -2,9 +2,9 @@ package controller;
 
 public class FrontAlign_Forward extends Driver {
 	
-	public final float F_SPEED = 4;
-	public final float T_SPEED = 2;
-	public final int T_PROXIMITY = 2;
+	public static final float F_SPEED = 4;
+	public static final float T_SPEED = 2;
+	public static final int T_PROXIMITY = 2;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {
