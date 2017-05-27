@@ -8,7 +8,7 @@ public class RearAlign_Reverse extends Driver {
 
 	@Override
 	public void behave(MyAIController controller, float delta) {
-		float angle = controller.getCarNodeOrientation();
+		float angle = controller.getCarNodeOrientation(null);
 		float velocity = controller.getVelocity();
 		if(angle == 0){
 			// not sure if this should be > or <

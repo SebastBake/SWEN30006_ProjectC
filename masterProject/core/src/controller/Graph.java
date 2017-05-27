@@ -183,10 +183,14 @@ public class Graph {
 	
 	/**
 	 * Remove the given node (if exists) from the HashMap
-	 * @param node
+	 * @param c is the location of the node to delete
 	 */
 	private void removeNode(Coordinate c){
-		Node n = nodeLookup(c);
+		int x = (int) Math.round(c.x);
+		int y = (int) Math.round(c.y);
+		Coordinate loc = new Coordinate(x, y);
+		
+		Node n = nodeLookup(loc);
 		if(n!=null){
 			nodeMap.remove(n.getCoordinate());
 		}
