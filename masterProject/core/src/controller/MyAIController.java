@@ -14,7 +14,7 @@ import world.WorldSpatial;
 public class MyAIController extends CarController{
 	
 	private Graph graph;
-	private List<Node> pathList;
+	public List<Node> pathList;
 	private Driver currentDriver;
 	private Driver previousDriver;
 	private MapTile currentTile;
@@ -78,8 +78,10 @@ public class MyAIController extends CarController{
 	 * 
 	 * @return the angle of the current Node and the destination Node
 	 */
-	public float getCarNodeOrientation(){
-		Node destNode = pathList.get(pathList.size() - 1);
+	public float getCarNodeOrientation(Node destNode){
+		if(destNode == null){
+			destNode = pathList.get(0);
+		}
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
 		Coordinate destCooridinate = destNode.getCoordinate();
@@ -240,5 +242,13 @@ public class MyAIController extends CarController{
 		return leftDist > rightDist ? leftDist : rightDist;
 	}
 	
+	// Helper function for proximity
+	public double distanceTo(Node node){
+		Coordinate carloc = new Coordinate(getPosition());
+		Coordinate nodecoords = node.getCoordinate();
+		float x_dist = Math.max(carloc.x, nodecoords.x) - Math.min(carloc.x, nodecoords.x);
+		float y_dist = Math.max(carloc.y, nodecoords.y) - Math.min(carloc.y, nodecoords.y);
+		return Math.sqrt(Math.pow(x_dist, 2) + Math.pow(y_dist, 2));
+	}
 	
 }

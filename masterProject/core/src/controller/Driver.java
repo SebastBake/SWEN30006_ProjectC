@@ -2,9 +2,8 @@
 package controller;
 
 public abstract class Driver {
-	
 	public Driver changeBehavior(MyAIController controller){
-		float angle = controller.getCarNodeOrientation();
+		float angle = controller.getCarNodeOrientation(null);
 		if(java.lang.Math.abs(angle) <= 90){
 			// Detect collisions and grass edges
 			Driver driver = new FrontAlign_Forward();
@@ -41,7 +40,7 @@ public abstract class Driver {
 		return null;
 		
 	}
-	
+		
 	public abstract void behave(MyAIController controller, float delta);
 	public abstract boolean isDone(MyAIController controller);
 
