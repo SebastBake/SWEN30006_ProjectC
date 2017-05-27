@@ -111,6 +111,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
+			addNode(helper, !EXPLORED);
 		}
 		
 		// check NORTH
@@ -122,6 +123,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
+			addNode(helper, !EXPLORED);
 		}
 		
 		// check WEST
@@ -133,6 +135,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
+			addNode(helper, !EXPLORED);
 		}
 		
 		// check SOUTH
@@ -144,7 +147,9 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
+			addNode(helper, !EXPLORED);
 		}
+
 	}
 	
 	
