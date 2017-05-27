@@ -1,10 +1,9 @@
-package mycontroller;
+package controller;
 
-public class RearAlign_Reverse extends Driver {
+public class UTurn extends Driver {
 	
-	public final float R_SPEED = 2;
-	public final float T_SPEED = 2;
-	public final int T_PROXIMITY = 2;
+	public final float F_SPEED = 4;
+	public float SIDE_SPACE_REQ;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {

@@ -49,14 +49,14 @@ public class Car extends Sprite{
 
 
 
-	private static final float MAX_SPEED = 7;
+	private static final float MAX_SPEED = 5f;
 	private static final float MAX_REVERSE_SPEED = 2.5f;
 	private static final float ROTATING_FACTOR = 150f;
 	private static final float STEERING_ADJUST_FACTOR = 0.05f;
 	private static final float EPSILON = 0.01f;
 	private static final float TURN_EPSILON = 0.05f;
 	private static final float BRAKING_FORCE = 2f;
-	private static final float ACCELERATION = 4;
+	private static final float ACCELERATION = 2f;
 	private static final float MAX_DEGREES = 360;
 	private static final float FRICTION_FORCE = 0.5f;
 	private static final int SNAP_THRESHOLD = 5;
@@ -462,6 +462,16 @@ public class Car extends Sprite{
 
 	}
 
+	public float normalizeAngle(float angle){
+		float calculatedAngle = angle % 360;
+		calculatedAngle = (calculatedAngle + 360) % 360;
+		if(calculatedAngle > 180){
+			calculatedAngle -= 360;
+		}
+
+		return Math.abs(calculatedAngle);
+	}
+
 	/** ACCESSIBLE METHODS **/
 	public float getVelocity(){
 		return velocity.len();
@@ -492,24 +502,16 @@ public class Car extends Sprite{
 
 		boolean reachable = true;
 
-		// Convert degree to the right orientation based on turning direction
-		// Going right are negative values while going left is positive.
-		if(turnDirection.equals(WorldSpatial.RelativeDirection.RIGHT) && degree > 0){
-			degree = 0 - degree;
-		}
 
-		if(turnDirection.equals(WorldSpatial.RelativeDirection.LEFT) && degree < 0){
-			degree = 360 - degree;
-		}
 
 		float timeDifference = -1;
-		if(degree > 0){
-			timeDifference = ((Math.abs(currentRotation-degree) % 360 + 360) % 360) / (ROTATING_FACTOR * delta);
-		}
-		else{
-			timeDifference = ((Math.abs(currentRotation+degree) % 360 + 360) % 360) / (ROTATING_FACTOR * delta);
-		}
-				
+		float normalizedRotation = normalizeAngle(currentRotation);
+		float normalizedDegree = normalizeAngle(degree);
+
+
+		timeDifference = ( Math.abs(normalizedRotation-normalizedDegree) / (ROTATING_FACTOR * delta));
+
+
 
 		for(int i = 0; i < (int) Math.round(timeDifference); i++){
 			if((currentRotation < degree && turnDirection.equals(WorldSpatial.RelativeDirection.LEFT) || (currentRotation > degree && turnDirection.equals(WorldSpatial.RelativeDirection.RIGHT)))){

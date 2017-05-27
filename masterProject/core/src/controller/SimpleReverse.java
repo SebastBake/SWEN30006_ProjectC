@@ -1,4 +1,4 @@
-package mycontroller;
+package controller;
 
 public class SimpleReverse extends Driver {
 	

@@ -1,6 +1,7 @@
-package mycontroller;
+package controller;
 
-public class TrapCostStrategy implements CostStrategy {
+
+public class CompositeCostStrategy implements CostStrategy {
 
 	@Override
 	public float travelCost(Node fromNode, Node toNode) {

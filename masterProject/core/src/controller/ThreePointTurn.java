@@ -1,10 +1,10 @@
-package mycontroller;
+package controller;
 
-public class StopAndRedirect extends Driver {
+public class ThreePointTurn extends Driver {
 	
 	public final float F_SPEED = 3;
-	public final float T_SPEED = 1;
-	public final int T_PROXIMITY = 2;
+	public final float R_SPEED = 3;
+	public final float SIDE_SPACE_REQ = 3;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {

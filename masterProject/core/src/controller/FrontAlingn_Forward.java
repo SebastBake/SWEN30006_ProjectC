@@ -1,4 +1,4 @@
-package mycontroller;
+package controller;
 
 public class FrontAlingn_Forward extends Driver {
 	
