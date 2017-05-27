@@ -4,13 +4,12 @@ import utilities.Coordinate;
 import world.*;
 
 public class UTurn extends Driver {
-	
-	public final float F_SPEED = 3;
-	public final float SIDE_SPACE_REQ = 3;
-	
+		
 	// change made
 	// an attribute to store the previous Direction
 	private WorldSpatial.Direction previousDirection;
+	public static final float F_SPEED = 4;
+	public static final float SIDE_SPACE_REQ = 4;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {

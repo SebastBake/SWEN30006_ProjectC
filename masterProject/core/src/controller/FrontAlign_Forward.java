@@ -1,8 +1,8 @@
 package controller;
 
-public class RearAlign_Reverse extends Driver {
+public class FrontAlign_Forward extends Driver {
 	
-	public static final float R_SPEED = 2;
+	public static final float F_SPEED = 4;
 	public static final float T_SPEED = 2;
 	public static final int T_PROXIMITY = 2;
 
@@ -11,9 +11,8 @@ public class RearAlign_Reverse extends Driver {
 		float angle = controller.getCarNodeOrientation();
 		float velocity = controller.getVelocity();
 		if(angle == 0){
-			// not sure if this should be > or <
-			if(velocity > R_SPEED){
-				controller.applyReverseAcceleration();
+			if(velocity < F_SPEED){
+				controller.applyForwardAcceleration();
 			}
 		} else {
 			if(angle < 0){
@@ -33,8 +32,7 @@ public class RearAlign_Reverse extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
-		
-		return true;
+		return false;
 	}
 
 }
