@@ -21,7 +21,7 @@ public abstract class Driver {
 			controller.newDriver(driver);
 			
 		} else {
-			//	RearAlign_Reverse is the slowest way to reverse,
+			//	SimpleReverse is the slowest way to reverse,
 			//	so I assign that first and then if there is space I
 			//	change it to be a more suitable turning method
 			
