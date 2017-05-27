@@ -33,8 +33,8 @@ public class RearAlign_Reverse extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return true;
 	}
 
 }

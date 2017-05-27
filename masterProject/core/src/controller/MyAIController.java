@@ -45,7 +45,6 @@ public class MyAIController extends CarController{
 			
 			
 		}
->>>>>>> 14d84ea04ec44d04103d7456a2fcf7914e8e5fad
 	}
 
 	/**

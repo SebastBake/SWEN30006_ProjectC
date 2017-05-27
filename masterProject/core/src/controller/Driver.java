@@ -26,12 +26,14 @@ public abstract class Driver {
 			//	change it to be a more suitable turning method
 			
 			float space = controller.getMaxSideSpace();
-			Driver turn = new RearAlign_Reverse();
+			Driver turn = new SimpleReverse();
 			
 			if(space < UTurn.SIDE_SPACE_REQ){
 				turn = new UTurn();
 			} else if (space < ThreePointTurn.SIDE_SPACE_REQ){
 				turn = new ThreePointTurn();
+			} else {
+				turn = new RearAlign_Reverse();
 			}
 			
 			controller.newDriver(turn);

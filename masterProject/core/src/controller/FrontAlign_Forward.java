@@ -32,7 +32,6 @@ public class FrontAlign_Forward extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
-		
 		return false;
 	}
 
