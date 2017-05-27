@@ -197,18 +197,23 @@ public class Graph {
 	
 	/**
 	 * Change made: decide if a given node is a useful node
-	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile
+	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile, also must not be a wall, 
+	 * and must not be already inside the graph
 	 */
 	private boolean isUseful(Node n){
 		Coordinate c = n.getCoordinate();
-		for(int i = 0; i < 2; i++){
-			for(int j = 0; j < 2; j++){
-				if(i == 1 && j == 1){
+		
+		for(int i = -1; i <= 1; i++){
+			for(int j = -1; j <= 1; j++){
+				if(i == 0 && j == 0){
 					continue;
 				}
-				boolean exit = n.isExitTile();
 				
-				if(World.lookUp(c.x - 1 + i, c.y - 1 + j).getName().equals("Wall") || World.lookUp(c.x - 1 + i, c.y - 1 + j).getName().equals("Trap") || exit){
+				boolean exit = n.isExitTile();
+				boolean trapAdjacent = World.lookUp(c.x + i, c.y + j).getName().equals("Trap");
+				boolean wallCorner = World.lookUp(c.x + i, c.y + j).getName().equals("Wall");
+				
+				if(wallCorner || trapAdjacent || exit){
 					return true;
 				}
 			}
