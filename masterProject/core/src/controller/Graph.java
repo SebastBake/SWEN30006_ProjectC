@@ -155,7 +155,7 @@ public class Graph {
 					}
 				}
 				if(isReachable){
-					addNode(new Node(new Coordinate(currentPosition.x - 3 + i, currentPosition.y - 4), World.lookUp(currentPosition.x - 3 + i, currentPosition.y - 4), true));
+					addNode(new Coordinate(currentPosition.x - 3 + i, currentPosition.y - 4), true);
 				}	
 			}
 		}	
@@ -190,7 +190,6 @@ public class Graph {
 		if(n!=null){
 			nodeMap.remove(n.getCoordinate());
 		}
-		destroy(n);
 	}
 	
 	/**

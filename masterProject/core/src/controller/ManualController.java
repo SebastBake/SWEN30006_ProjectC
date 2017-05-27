@@ -12,7 +12,7 @@ public class ManualController extends CarController{
 	}
 	
 	public void update(float delta){
-
+		
         if (Gdx.input.isKeyPressed(Input.Keys.B)) {
             applyBrake();
         }
