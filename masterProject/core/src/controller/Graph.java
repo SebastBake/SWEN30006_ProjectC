@@ -20,9 +20,9 @@ public class Graph {
 			Coordinate currentPosition, 
 			HashMap<Coordinate, MapTile> currentView, 
 			HashMap<Coordinate, MapTile> previousViews){
-		updateUnexploredNodes(currentPosition, currentView, previousViews);
+		updateUnexploredNodes(currentPosition, currentView);
 		updateExploredNodes(currentView, previousViews);
-		updateEdges(currentView, previousViews);
+		updateEdges();
 	}
 	
 	public List<Node> getPathList(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
@@ -38,9 +38,28 @@ public class Graph {
 		return false;
 	}
 	
-	private ArrayList<Node> getGraphNodesInView(
-			HashMap<Coordinate, MapTile> currentView, 
-			HashMap<Coordinate, MapTile> previousViews){
+	/**
+	 * Returns a list of nodes within the given radius
+	 * @param radius the radius in which to search for nodes
+	 * @param pos the center position
+	 * @return
+	 */
+	private ArrayList<Node> getNodesInRadius(int radius, Coordinate pos){
+		Coordinate helper = new Coordinate(pos.x,pos.y);
+		Node n = null;
+		ArrayList<Node> radList = new ArrayList<Node>();
+		
+		for(int i = -radius;i<=radius; i++) {
+			for(int j = -radius;j<=radius; j++) {
+				helper.x = pos.x+i;
+				helper.y = pos.y+j;
+				
+				n = nodeLookup(helper);
+				if (n!=null) {
+					radList.add(n);
+				}
+			}
+		}
 		return null;
 	}
 	
@@ -133,11 +152,8 @@ public class Graph {
 	/**
 	 * Draws edges between every pair of nodes in the view which have a clear path between them (use lineOfSight()).
 	 * Don't draw edges already in the graph.
-	 * @param currentView
-	 * @param previousViews
 	 */
-	private void updateEdges(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
-	
+	private void updateEdges(){
 	}
 	
 	/**
