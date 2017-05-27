@@ -29,9 +29,8 @@ public class MyAIController extends CarController{
 	@Override
 	public void update(float delta) {
 		updateCurrentTile();
-<<<<<<< HEAD
 		if(!previousTile.equals(currentTile)){
-			updateCurrentView();
+			updateViews();
 			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
 			// pathList = graph.getPathList(currentView, previousViews);
 		}
@@ -39,15 +38,6 @@ public class MyAIController extends CarController{
 			previousDriver.changeBehavior(this);
 		}
 		currentDriver.behave(this, delta);
-=======
-		if (currentTile != previousTile) {
-			
-			updateViews();
-			graph.updateGraph(currentTile, currentView, previousViews);
-			
-			
-		}
->>>>>>> 14d84ea04ec44d04103d7456a2fcf7914e8e5fad
 	}
 
 	/**
