@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import controller.CarController;
 import tiles.*;
@@ -13,7 +14,7 @@ import world.WorldSpatial;
 public class MyAIController extends CarController{
 	
 	private Graph graph;
-	private ArrayList<Node> pathList;
+	private List<Node> pathList;
 	private Driver currentDriver;
 	private Driver previousDriver;
 	private MapTile currentTile;
@@ -32,7 +33,7 @@ public class MyAIController extends CarController{
 		if(!previousTile.equals(currentTile)){
 			updateViews();
 			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
-			// pathList = graph.getPathList(currentView, previousViews);
+			pathList = graph.getPathList(currentView, previousViews);
 		}
 		if(previousDriver.isDone(this)){
 			previousDriver.changeBehavior(this);

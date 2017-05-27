@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import tiles.*;
@@ -10,6 +11,8 @@ import world.World;
 
 public class Graph {
 	
+	private static final boolean EXPLORED = true;
+	
 	private HashMap<Coordinate, Node> nodeMap;
 	private CostStrategy costStrategy;
 	
@@ -17,11 +20,11 @@ public class Graph {
 		updateUnexploredNodes(currentPosition, currentView, previousViews);
 		updateExploredNodes(currentView, previousViews);
 		updateEdges(currentView, previousViews);
-		
 	}
 	
-	public void getPathList(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
-		
+	public List<Node> getPathList(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
+		Node best = generateBestDestination();
+		return null;
 	}
 	
 	private Node generateBestDestination(){
@@ -36,7 +39,6 @@ public class Graph {
 	
 	private ArrayList<Node> getGraphNodesInView(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
 		return null;
-		
 	}
 	
 	/**
@@ -47,14 +49,17 @@ public class Graph {
 	 * @param previousViews (not used)
 	 */
 	private void updateExploredNodes(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
-		Coordinate[] coordinatesInView = (Coordinate[]) currentView.keySet().toArray();
-		for(int i = 0; i < coordinatesInView.length; i++){
-			Node currentNode = new Node(coordinatesInView[i], World.lookUp(coordinatesInView[i].x, coordinatesInView[i].y), false);
-			if(nodeMap.containsKey(coordinatesInView[i])){
-				removeNode(currentNode);
+		for(Coordinate viewedCoordinate : currentView.keySet()){
+			
+			// remove nodes which were previously unexplored
+			if ( nodeMap.containsKey(viewedCoordinate) ) {
+				if (nodeMap.get(viewedCoordinate).isUnexplored()) {
+					removeNode(viewedCoordinate);
+				}
 			}
-			if(isUseful(currentNode)){
-				addNode(currentNode);
+			
+			if(isUseful(viewedCoordinate)){
+				addNode(viewedCoordinate, EXPLORED);
 			}
 		}
 		
@@ -172,52 +177,107 @@ public class Graph {
 	 * @param c2
 	 * @return an ArrayList of MapTile representing all the MapTile that the line has
 	 */
-	private ArrayList<MapTile> lineOfSight(Coordinate c1, Coordinate c2){
+	private ArrayList<MapTile> lineOfSight(Coordinate c1, Coordinate c2) {
 		return null;
-		
 	}
 	
 	/**
 	 * Remove the given node (if exists) from the HashMap
 	 * @param node
 	 */
-	private void removeNode(Node n){
-		if(nodeMap.containsValue(n)){
+	private void removeNode(Coordinate c){
+		Node n = nodeLookup(c);
+		if(n!=null){
 			nodeMap.remove(n.getCoordinate());
-		}	
+		}
+		destroy(n);
 	}
 	
 	/**
 	 * Add the given node to the HashMap
-	 * @param node
+	 * @param c is the location of the new node
+	 * @param unexplored is a boolean - true for unexplored
 	 */
-	private void addNode(Node n){
-		nodeMap.putIfAbsent(n.getCoordinate(), n);
+	private void addNode(Coordinate c, boolean unexplored){
+		int x = (int) Math.round(c.x);
+		int y = (int) Math.round(c.y);
+		Coordinate loc = new Coordinate(x, y);
+		
+		nodeMap.putIfAbsent(loc, new Node (loc, unexplored));
 	}
 	
 	/**
-	 * Change made: decide if a given node is a useful node
-	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile, also must not be a wall, 
-	 * and must not be already inside the graph
+	 * @param c is the coordinate to lookup
+	 * @return node coordinate is inside the graph
 	 */
-	private boolean isUseful(Node n){
-		Coordinate c = n.getCoordinate();
+	private Node nodeLookup(Coordinate c) {
+		int x = (int) Math.round(c.x);
+		int y = (int) Math.round(c.y);
+		Coordinate loc = new Coordinate(x, y);
 		
-		for(int i = -1; i <= 1; i++){
-			for(int j = -1; j <= 1; j++){
-				if(i == 0 && j == 0){
-					continue;
-				}
-				
-				boolean exit = n.isExitTile();
-				boolean trapAdjacent = World.lookUp(c.x + i, c.y + j).getName().equals("Trap");
-				boolean wallCorner = World.lookUp(c.x + i, c.y + j).getName().equals("Wall");
-				
-				if(wallCorner || trapAdjacent || exit){
-					return true;
+		return nodeMap.get(loc);
+	}
+	
+	/**
+	 * Change made: decide if a given coordinate is a useful coordinate for a node
+	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile, also must not be a wall
+	 */
+	private boolean isUseful(Coordinate center) {
+		
+		// not useful if there's already a node there
+		if (nodeLookup(center) != null) {
+			return false;
+		}
+		
+		boolean isWall = World.lookUp(center.x, center.y).getName().equals("Wall");
+		boolean isUtility = World.lookUp(center.x, center.y).getName().equals("Utility");
+		boolean isTrap = World.lookUp(center.x, center.y).getName().equals("Trap");
+		
+		// is a wall? -- not useful
+		if (isWall) {
+			return false;
+		}
+		
+		// is exit? -- useful
+		if (isUtility) {
+			if ( ( (UtilityTile) World.lookUp(center.x, center.y)).isExit() ) {
+				return true;
+			}
+		}
+		
+		// adjacent to a trap? -- useful
+		if (!isTrap) {
+			Coordinate c = new Coordinate(0,0); // side coordinate
+			for(int i = -1; i <= 1; i++){
+				for(int j = -1; j <= 1; j++){
+					
+					if(i == 0 && j == 0) { continue; }
+					c.x = center.x + i;
+					c.y = center.y + j;
+					
+					if (World.lookUp(center.x, center.y).getName().equals("Trap")) {
+						return true;
+					}
+					
 				}
 			}
 		}
+		
+		// is a corner of a wall? -- useful
+		// variables below are true if they are not walls;
+		boolean n	= !World.lookUp(center.x  , center.y+1).getName().equals("Wall");
+		boolean ne	= !World.lookUp(center.x+1, center.y+1).getName().equals("Wall");
+		boolean e	= !World.lookUp(center.x+1, center.y  ).getName().equals("Wall");
+		boolean se	= !World.lookUp(center.x+1, center.y-1).getName().equals("Wall");
+		boolean s	= !World.lookUp(center.x  , center.y-1).getName().equals("Wall");
+		boolean sw	= !World.lookUp(center.x-1, center.y-1).getName().equals("Wall");
+		boolean w	= !World.lookUp(center.x-1, center.y  ).getName().equals("Wall");
+		boolean nw	= !World.lookUp(center.x-1, center.y+1).getName().equals("Wall");
+		if (n && e && ne) {return true;}
+		if (s && e && se) {return true;}
+		if (s && w && sw) {return true;}
+		if (n && w && nw) {return true;}
+		
 		return false;
 	}
 
