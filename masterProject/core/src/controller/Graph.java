@@ -206,7 +206,9 @@ public class Graph {
 				if(i == 1 && j == 1){
 					continue;
 				}
-				if(World.lookUp(c.x - 1 + i, c.y - 1 + j).getName().equals("Wall") || World.lookUp(c.x - 1 + i, c.y - 1 + j).getName().equals("Trap") || n.isExitTile()){
+				boolean exit = n.isExitTile();
+				
+				if(World.lookUp(c.x - 1 + i, c.y - 1 + j).getName().equals("Wall") || World.lookUp(c.x - 1 + i, c.y - 1 + j).getName().equals("Trap") || exit){
 					return true;
 				}
 			}

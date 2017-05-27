@@ -23,14 +23,21 @@ public class MyAIController extends CarController{
 	
 	public MyAIController(Car car) {
 		super(car);
+		graph = new Graph();
 	}
 
 	@Override
 	public void update(float delta) {
-		
-		
+		updateCurrentTile();
+		if (currentTile != previousTile) {
+			
+			updateViews();
+			graph.updateGraph(currentTile, currentView, previousViews);
+			
+			
+		}
 	}
-	
+
 	/**
 	 * Update Driver
 	 * @param newDriver
@@ -52,12 +59,13 @@ public class MyAIController extends CarController{
 	/**
 	 * Update currentView and previousViews
 	 */
-	private void updateCurrentView(){
+	private void updateViews(){
 		if(previousViews == null){
 			previousViews = currentView;
-		} else if(currentView != null){
+		} else {
 			previousViews.putAll(currentView);
 		}
+		
 		currentView = getView();
 	}
 		
@@ -238,7 +246,7 @@ public class MyAIController extends CarController{
 			}
 			break;	
 		}
-		return leftDist + rightDist;
+		return leftDist > rightDist ? leftDist : rightDist;
 	}
 	
 	
