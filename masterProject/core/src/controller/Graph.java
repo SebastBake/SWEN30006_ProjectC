@@ -16,7 +16,10 @@ public class Graph {
 	private HashMap<Coordinate, Node> nodeMap;
 	private CostStrategy costStrategy;
 	
-	public void updateGraph(Coordinate currentPosition, HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
+	public void updateGraph(
+			Coordinate currentPosition, 
+			HashMap<Coordinate, MapTile> currentView, 
+			HashMap<Coordinate, MapTile> previousViews){
 		updateUnexploredNodes(currentPosition, currentView, previousViews);
 		updateExploredNodes(currentView, previousViews);
 		updateEdges(currentView, previousViews);
@@ -29,15 +32,15 @@ public class Graph {
 	
 	private Node generateBestDestination(){
 		return null;
-		
 	}
 	
 	private boolean feasibleVisit(Node fromNode, Node toNode){
 		return false;
-		
 	}
 	
-	private ArrayList<Node> getGraphNodesInView(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
+	private ArrayList<Node> getGraphNodesInView(
+			HashMap<Coordinate, MapTile> currentView, 
+			HashMap<Coordinate, MapTile> previousViews){
 		return null;
 	}
 	
@@ -69,97 +72,63 @@ public class Graph {
 	 * Change made: Add currentPosition as a parameter
 	 * Add unexplored nodes into the graph
 	 * Added nodes are just outside the view, have coordinates not recorded in the previous views, and have an unobstructed path to them
+	 * Change : Don't need currentView
 	 * @param currentPositon 
 	 * @param currentView
 	 * @param previousViews
 	 */
-	private void updateUnexploredNodes(Coordinate currentPosition, HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
-		boolean isReachable = true;
+	private void updateUnexploredNodes(Coordinate currentPos, HashMap<Coordinate, MapTile> previousViews){
+		
+		int j=0; // relative vertical distance from car
+		int i=0; // relative horizontal distance from car
+		Coordinate helper = new Coordinate(currentPos.x, currentPos.y);
+		
 		// check EAST
-		for(int i = 0; i <  7; i++){
-			if(!World.lookUp(currentPosition.x - 4, currentPosition.y - 3 + i).getName().equals("Empty") && !previousViews.containsKey(new Coordinate(currentPosition.x - 4, currentPosition.y - 3 + i))){
-				isReachable = true;
-				for(int j = 0 ; j < 3; j++){
-					for(int k = 0; k < 7; k++){
-						if(k == 6){
-							if(World.lookUp(currentPosition.x - j, currentPosition.y - 3 + k).getName().equals("Wall")){
-								isReachable = false;
-							}
-						}
-						if(!World.lookUp(currentPosition.x - j, currentPosition.y - 3 + k).getName().equals("Wall")){
-							break;
-						}
-					}
-				}
-				if(isReachable){
-					addNode(new Node(new Coordinate(currentPosition.x - 4, currentPosition.y - 3 + i), World.lookUp(currentPosition.x - 4, currentPosition.y - 3 + i), true));
-				}	
-			} 
+		i = 3;
+		for(j = -2; j <= 3; j++){
+			helper.x = currentPos.x+i;
+			helper.y = currentPos.y+j;
+			
+			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
+			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
+			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
 		}
+		
 		// check NORTH
-		for(int i = 0; i <  7; i++){
-			if(!World.lookUp(currentPosition.x - 3 + i, currentPosition.y + 4).getName().equals("Empty") && !previousViews.containsKey(new Coordinate(currentPosition.x - 3 + i, currentPosition.y + 4))){
-				isReachable = true;
-				for(int j = 0 ; j < 3; j++){
-					for(int k = 0; k < 7; k++){
-						if(k == 6){
-							if(World.lookUp(currentPosition.x - 3 + k, currentPosition.y + j).getName().equals("Wall")){
-								isReachable = false;
-							}
-						}
-						if(!World.lookUp(currentPosition.x - 3 + k, currentPosition.y + j).getName().equals("Wall")){
-							break;
-						}
-					}
-				}
-				if(isReachable){
-					addNode(new Node(new Coordinate(currentPosition.x - 3 + i, currentPosition.y + 4), World.lookUp(currentPosition.x - 3 + i, currentPosition.y + 4), true));
-				}	
-			}
+		j = 3;
+		for(i = -3; i <= 2; i++){
+			helper.x = currentPos.x+i;
+			helper.y = currentPos.y+j;
+			
+			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
+			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
+			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
 		}
+		
 		// check WEST
-		for(int i = 0; i <  7; i++){
-			if(!World.lookUp(currentPosition.x + 4, currentPosition.y + 3 - i).getName().equals("Empty") && !previousViews.containsKey(new Coordinate(currentPosition.x + 4, currentPosition.y + 3 - i))){
-				isReachable = true;
-				for(int j = 0 ; j < 3; j++){
-					for(int k = 0; k < 7; k++){
-						if(k == 6){
-							if(World.lookUp(currentPosition.x + j, currentPosition.y + 3 - k).getName().equals("Wall")){
-								isReachable = false;
-							}
-						}
-						if(!World.lookUp(currentPosition.x + j , currentPosition.y + 3 - k).getName().equals("Wall")){
-							break;
-						}
-					}
-				}
-				if(isReachable){
-					addNode(new Node(new Coordinate(currentPosition.x + 4, currentPosition.y + 3 - i), World.lookUp(currentPosition.x + 4, currentPosition.y + 3 - i), true));
-				}	
-			}
+		i = -3;
+		for(i = -3; i <= 2; i++){
+			helper.x = currentPos.x+i;
+			helper.y = currentPos.y+j;
+			
+			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
+			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
+			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
 		}
+		
 		// check SOUTH
-		for(int i = 0; i <  7; i++){
-			if(!World.lookUp(currentPosition.x - 3 + i, currentPosition.y - 4).getName().equals("Empty") && !previousViews.containsKey(new Coordinate(currentPosition.x - 3 + i, currentPosition.y - 4))){
-				isReachable = true;
-				for(int j = 0 ; j < 3; j++){
-					for(int k = 0; k < 7; k++){
-						if(k == 6){
-							if(World.lookUp(currentPosition.x - 3 + j, currentPosition.y - 4 + k).getName().equals("Wall")){
-								isReachable = false;
-							}
-						}
-						if(!World.lookUp(currentPosition.x -3 + j , currentPosition.y - 4 + k).getName().equals("Wall")){
-							break;
-						}
-					}
-				}
-				if(isReachable){
-					addNode(new Node(new Coordinate(currentPosition.x - 3 + i, currentPosition.y - 4), World.lookUp(currentPosition.x - 3 + i, currentPosition.y - 4), true));
-				}	
-			}
-		}	
+		j = -3;
+		for(i = -2; i <= 3; i++){
+			helper.x = currentPos.x+i;
+			helper.y = currentPos.y+j;
+			
+			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
+			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
+			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
+		}
 	}
+	
+	
 	
 	/**
 	 * Draws edges between every pair of nodes in the view which have a clear path between them (use lineOfSight()).
@@ -173,12 +142,56 @@ public class Graph {
 	
 	/**
 	 * Used in updateEdges() draw the line
+	 * @param c1 start coordinate
+	 * @param c2 end coordinate
+	 * @return an ArrayList of MapTile representing all the MapTile that the line has
+	 */
+	private ArrayList<MapTile> lineOfSight(Coordinate c1, Coordinate c2) {
+		double gradient = (c2.y - c1.y)/(c2.x - c1.x);
+		double length = Math.hypot(c2.y - c1.y, c2.x - c1.x);
+		double res = 0.1; 
+		Coordinate point = new Coordinate(c1.x, c1.y);
+		
+		MapTile previousTile = World.lookUp(point.x, point.y);
+		MapTile currentTile = null;
+		
+		double xchange =0;
+		double ychange =0;
+		
+		ArrayList<MapTile> tiles = new ArrayList<MapTile>();
+		
+		for (double line = 0; line < length ; line =+ res) {
+			xchange =Math.sqrt( Math.pow(res,2) / ( 1 + Math.pow(gradient,2)) );
+			ychange =xchange*gradient;
+			point.x =(int) Math.round(point.x + xchange);
+			point.y =(int) Math.round(point.y + ychange);
+			
+			previousTile = currentTile;
+			currentTile = World.lookUp(point.x, point.y);
+			if (currentTile!=previousTile) {
+				tiles.add(currentTile);
+			}
+		}
+		
+		return tiles;
+	}
+	
+	/** This is a helper method which wasn't in the original design
+	 * Returns true if there is a wall between two 
 	 * @param c1
 	 * @param c2
 	 * @return an ArrayList of MapTile representing all the MapTile that the line has
 	 */
-	private ArrayList<MapTile> lineOfSight(Coordinate c1, Coordinate c2) {
-		return null;
+	private boolean walledPath(Coordinate c1, Coordinate c2) {
+		ArrayList<MapTile> tiles = lineOfSight(c1, c2);
+		
+		for(MapTile t : tiles) {
+			if (t.getName().equals("Wall")) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
