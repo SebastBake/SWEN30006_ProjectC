@@ -11,7 +11,7 @@ public class TrapCostStrategy implements CostStrategy {
 	}
 	
 	@Override
-	public float travelCost(Coordinate fromCoord, Node toNode){
+	public float travelCost(Coordinate fromCoord, Node toNode, float carAngle){
 		float cost = 0;
 		int x = fromCoord.x;
 		int y = fromCoord.y;
@@ -31,7 +31,7 @@ public class TrapCostStrategy implements CostStrategy {
 	}
 	
 	@Override
-	public float travelCost(Node fromNode, Node toNode) {
+	public float travelCost(Node fromNode, Node toNode, float carAngle) {
 		Coordinate coord = fromNode.getCoordinate();
 		return travelCost(coord, toNode);
 		

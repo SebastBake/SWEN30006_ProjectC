@@ -150,9 +150,9 @@ public class MyAIController extends CarController{
 		System.out.println(toNode.getCoordinate().toString() + " : " + angleBetween);
 		return angleBetween;
 		// Aidan's solution
-//		double nodeAngle = Math.atan2(toNode.getCoordinate().x, toNode.getCoordinate().y);
-//		double magnitudeNode = Math.sqrt(Math.pow(toNode.getCoordinate().x, 2) + Math.pow(toNode.getCoordinate().y, 2));
-//		return (float)Math.acos((toNode.getCoordinate().x - currentLoc.x) / (magnitudeNode * Math.sin(nodeAngle)));
+		//	double nodeAngle = Math.atan2(toNode.getCoordinate().y, toNode.getCoordinate().x);
+		//	double magnitudeNode = Math.sqrt(Math.pow(toNode.getCoordinate().x, 2) + Math.pow(toNode.getCoordinate().y, 2));
+		//	return (float)Math.acos((toNode.getCoordinate().x - currentLoc.x) / (magnitudeNode * Math.sin(nodeAngle)));
 		
 	}
 	
@@ -161,32 +161,23 @@ public class MyAIController extends CarController{
 	 * @return if the car has hit the wall or not
 	 */
 	public boolean detectCollision(){
-		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		//switch(direction){
 		//case NORTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
 		//case SOUTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
 		//case WEST:
 			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
 		//case EAST:
 			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
-		//default:
-		//	break;
-		//}
 		return false;
 	}
 	
@@ -197,30 +188,22 @@ public class MyAIController extends CarController{
 	public boolean detectGrassEdge(){
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		//switch(direction){
 		//case NORTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1) instanceof GrassTrap){
 				return true;
 			}
-		//	break;
 		//case SOUTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1) instanceof GrassTrap){
 				return true;
 			}
-		//	break;
 		//case WEST:
 			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y) instanceof GrassTrap){
 				return true;
 			}
-		//	break;
 		//case EAST:
 			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y) instanceof GrassTrap){
 				return true;
 			}
-		//	break;
-		//default:
-		//	break;
-		//}
 		return false;
 	}
 	
