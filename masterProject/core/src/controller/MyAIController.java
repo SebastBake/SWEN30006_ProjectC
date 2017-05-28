@@ -101,7 +101,59 @@ public class MyAIController extends CarController{
 		}
 		Coordinate currentCoordinate = new Coordinate(getPosition());
 		Coordinate destCoordinate = destNode.getCoordinate();
-		return (float) Math.toDegrees((float) Math.atan((float)(destCoordinate.y - currentCoordinate.y)/(float)(destCoordinate.x - currentCoordinate.x)));
+		WorldSpatial.Direction direction = getOrientation();
+		float degree = (float) Math.toDegrees((float) Math.atan((float)(destCoordinate.y - currentCoordinate.y)/(float)(destCoordinate.x - currentCoordinate.x)));
+		if(degree == -90){
+			return 120;
+		}
+		if(degree == 90){
+			return 0;
+		}
+		switch(direction){
+		case NORTH:
+			if(destCoordinate.y < currentCoordinate.y){
+				if(degree > 0){
+					return -180 + degree;
+				} else {
+					return 180 + degree;
+				}	
+			} else {
+				return degree;
+			}
+		case SOUTH:
+			if(destCoordinate.y > currentCoordinate.y){
+				if(degree > 0){
+					return -180 + degree;
+				} else {
+					return 180 + degree;
+				}	
+			} else {
+				return degree;
+			}
+		case WEST:
+			if(destCoordinate.x > currentCoordinate.x){
+				if(degree > 0){
+					return -180 + degree;
+				} else {
+					return 180 + degree;
+				}	
+			} else {
+				return degree;
+			}
+		case EAST:
+			if(destCoordinate.x < currentCoordinate.x){
+				if(degree > 0){
+					return -180 + degree;
+				} else {
+					return 180 + degree;
+				}	
+			} else {
+				return degree;
+			}
+		
+			
+		}
+		return degree;
 	}
 	
 	/**
