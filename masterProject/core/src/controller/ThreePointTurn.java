@@ -176,9 +176,7 @@ public class ThreePointTurn extends Driver {
 			if(secondLocation.toString().equals(controller.getPosition())){
 				if(isTurnLeft){
 					controller.turnRight(delta);
-					controller.turnRight(delta);
 				}else{
-					controller.turnLeft(delta);
 					controller.turnLeft(delta);
 				}
 			}
@@ -256,6 +254,9 @@ public class ThreePointTurn extends Driver {
 	}
 
 	@Override
+	/**
+	 * It's considered done when the car faces the opposite direction
+	 */
 	public boolean isDone(MyAIController controller) {
 		WorldSpatial.Direction direction = controller.getOrientation();
 		switch(previousDirection){
@@ -281,10 +282,6 @@ public class ThreePointTurn extends Driver {
 			break;
 		}
 		return false;
-	}
-	
-	public String toString(){
-		return "ThreePointTurn";
 	}
 
 }
