@@ -6,7 +6,7 @@ public abstract class Driver {
 	// change the current driver to another driver
 
 	public Driver changeBehavior(MyAIController controller){
-		float angle = ((float)/*Math.toDegrees( */controller.getCarNodeOrientation(null) );//);
+		float angle = ((float) Math.toDegrees(controller.getCarNodeOrientation(null) ));
 		System.out.println(angle);
 		Driver driver;
 		if(controller.detectCollision()){
