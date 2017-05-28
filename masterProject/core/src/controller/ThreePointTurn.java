@@ -8,7 +8,7 @@ public class ThreePointTurn extends Driver {
 	
 	public final float F_SPEED = 3;
 	public final float R_SPEED = 3;
-	public final static float SIDE_SPACE_REQ = 2;
+	public final static float SIDE_SPACE_REQ = 1;
 	
 	// stop the acceleration
 	private boolean shouldStop = false;

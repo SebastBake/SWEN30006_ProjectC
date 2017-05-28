@@ -114,12 +114,11 @@ public class MyAIController extends CarController{
 		
 		}
 		
-		float angle = (float) Math.abs(
-				carAngle - Math.atan2(
-								currentLoc.y-toNode.getCoordinate().y, 
-								currentLoc.x-toNode.getCoordinate().x));
+		double nodeAngle = Math.atan2(toNode.getCoordinate().x, toNode.getCoordinate().y);
+		double magnitudeNode = Math.sqrt(Math.pow(toNode.getCoordinate().x, 2) + Math.pow(toNode.getCoordinate().y, 2));
+		return (float)Math.acos((toNode.getCoordinate().x - currentLoc.x) / (magnitudeNode * Math.sin(nodeAngle)));
 		
-		return angle;
+//		return (float)Math.toDegrees(nodeAngle - carAngle);
 	}
 	
 	/**
