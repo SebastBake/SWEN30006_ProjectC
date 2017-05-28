@@ -1,16 +1,21 @@
 package controller;
 
 import tiles.MapTile;
+import utilities.Coordinate;
 import world.World;
 
 public class TrapCostStrategy implements CostStrategy {
-
-	@Override
-	public float travelCost(Node fromNode, Node toNode) {
-		float cost = 0;
-		int x = fromNode.getCoordinate().x;
-		int y = fromNode.getCoordinate().y;
+	
+	public TrapCostStrategy(){
 		
+	}
+	
+	@Override
+	public float travelCost(Coordinate fromCoord, Node toNode){
+		float cost = 0;
+		int x = fromCoord.x;
+		int y = fromCoord.y;
+
 		MapTile temp;
 		
 		double opposite = toNode.getCoordinate().x - x;
@@ -22,8 +27,14 @@ public class TrapCostStrategy implements CostStrategy {
 			temp = World.lookUp(x + i * Math.cos(angle), y + i * Math.sin(angle));
 			if(temp.getName().equals("Trap")) cost += 1;
 		}
-		// TODO Auto-generated method stub
 		return cost;
+	}
+	
+	@Override
+	public float travelCost(Node fromNode, Node toNode) {
+		Coordinate coord = fromNode.getCoordinate();
+		return travelCost(coord, toNode);
+		
 	}
 
 }
