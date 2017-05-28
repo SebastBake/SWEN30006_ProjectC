@@ -121,15 +121,17 @@ public class Graph {
 						visitQueue.push(visiting);
 						
 						// update best node
-						if (visiting.isUnexplored() && best.isUnexplored()) {
+						if (!best.isUnexplored() && visiting.isUnexplored()){
+							best = visiting;
+						}else if (visiting.isUnexplored() && best.isUnexplored()) {
 							if (visiting.getCost() < best.getCost()) { 
-								visiting = best;
+								best = visiting;
 							}
 						} else if (visiting.isExitTile() && !best.isExitTile()) {
-							visiting = best;
+							best = visiting;
 						} else if (visiting.isExitTile() && best.isExitTile()) {
 							if (visiting.getCost() < best.getCost()) { 
-								visiting = best;
+								best = visiting;
 							}
 						}
 					}
