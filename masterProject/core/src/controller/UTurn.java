@@ -8,7 +8,7 @@ public class UTurn extends Driver {
 	// change made
 	// an attribute to store the previous Direction
 	private WorldSpatial.Direction previousDirection;
-	public static final float F_SPEED = 3;
+	public static final float F_SPEED = 2;
 	public static final float SIDE_SPACE_REQ = 3;
 
 	@Override

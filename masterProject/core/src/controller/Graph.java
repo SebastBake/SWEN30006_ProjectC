@@ -10,6 +10,8 @@ import world.World;
 
 public class Graph {
 	
+	// change made
+	// add a final boolean attribute to avoid magic booleans
 	private static final boolean EXPLORED = true;
 	
 	private HashMap<Coordinate, Node> nodeMap;
@@ -23,8 +25,11 @@ public class Graph {
 	
 	
 	/**
+	 * Change made
+	 * Add the current position as a parameter
+	 * 
 	 * Updates all nodes and edges of the graph
-	 * @param currentPosition
+	 * @param currentPosition 
 	 * @param currentView
 	 * @param previousViews
 	 */
@@ -38,10 +43,12 @@ public class Graph {
 	}
 	
 	/**
+	 * Change made
+	 * Change the return type from ArrayList<Node> to LinkedList<Node>
+	 * Change the parameters into current position only
 	 * 
-	 * @param currentView
-	 * @param previousViews
-	 * @return
+	 * @param Coordinate: current position
+	 * @return a linked list of nodes
 	 */
 	public LinkedList<Node> getPathList(Coordinate currentPos){
 
@@ -66,7 +73,11 @@ public class Graph {
 	}
 	
 	/**
-	 * Uses a variant of dijstra's algorithm to find the bestdestination in the graph
+	 * Change made 
+	 * Add current position as parameter
+	 * 
+	 * Uses a variant of dijstra's algorithm to find the best destination in the graph
+	 * @param current position
 	 * @return the best destination
 	 */
 	private Node generateBestDestination(Coordinate currentPos){
@@ -86,7 +97,7 @@ public class Graph {
 				visitQueue.add(closeNode);
 			}
 		}
-		best = visitQueue.peek(); // initialise best to be a random node to avoid null pointer exceptions
+		best = visitQueue.peek(); // initialize best to be a random node to avoid null pointer exceptions
 		
 		// Iterate over all the nodes to visit
 		while (!visitQueue.isEmpty()) {
@@ -137,10 +148,10 @@ public class Graph {
 	}
 	
 	/**
-	 * Returns a list of nodes within the given radius
+	 * Get the list of nodes within the given radius
 	 * @param radius the radius in which to search for nodes
 	 * @param pos the center position
-	 * @return
+	 * @return a list of nodes within the given radius
 	 */
 	private ArrayList<Node> getNodesInRadius(int radius, Coordinate pos){
 		Coordinate helper = new Coordinate(pos.x,pos.y);

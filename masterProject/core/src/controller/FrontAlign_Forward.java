@@ -1,7 +1,5 @@
 package controller;
 
-import utilities.Coordinate;
-
 public class FrontAlign_Forward extends Driver {
 	
 	public static final float F_SPEED = 4;
