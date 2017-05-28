@@ -37,7 +37,6 @@ public class MyAIController extends CarController{
 		
 		currentDriver = new FrontAlign_Forward();
 		previousDriver = currentDriver;
-		
 	}
 
 	@Override
