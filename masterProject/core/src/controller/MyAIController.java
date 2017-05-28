@@ -60,7 +60,7 @@ public class MyAIController extends CarController{
 			pathList.remove(0);
 		}
 		
-		if(previousDriver.isDone(this)){
+		if(currentDriver.isDone(this)){
 			previousDriver.changeBehavior(this);
 		}
 		
@@ -118,7 +118,7 @@ public class MyAIController extends CarController{
 								currentLoc.y-toNode.getCoordinate().y, 
 								currentLoc.x-toNode.getCoordinate().x ));
 		
-		return angle;
+		return (float) Math.toDegrees(angle);
 	}
 	
 	/**
