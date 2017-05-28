@@ -34,12 +34,7 @@ public class FrontAlign_Forward extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
-		Coordinate currentPosition = new Coordinate(controller.getPosition());
-		if(currentPosition.equals(controller.pathList.get(0))){
-			controller.pathList.remove(0);
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 }

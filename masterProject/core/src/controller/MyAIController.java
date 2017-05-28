@@ -1,7 +1,7 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import tiles.GrassTrap;
@@ -14,7 +14,7 @@ import world.WorldSpatial;
 public class MyAIController extends CarController{
 	
 	private Graph graph;
-	public List<Node> pathList = new ArrayList<Node>();
+	public List<Node> pathList = new LinkedList<Node>();
 	private Driver currentDriver;
 	private Driver previousDriver;
 	private MapTile currentTile;
@@ -31,7 +31,7 @@ public class MyAIController extends CarController{
 	public void update(float delta) {
 		updateCurrentTile();
 		updateViews();
-		if(previousTile == null || !previousTile.equals(currentTile)){
+		//if(previousTile == null || !previousTile.equals(currentTile)){
 			//updateViews();
 			//graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
 			// pathList = graph.getPathList(currentView, previousViews);
@@ -39,19 +39,22 @@ public class MyAIController extends CarController{
 			 * for testing
 			 */
 			if(pathList.isEmpty()){
+				pathList.add(new Node(new Coordinate(4, 17), false));
 				pathList.add(new Node(new Coordinate(7, 17), false));
-				pathList.add(new Node(new Coordinate(4, 16), false));
+				pathList.add(new Node(new Coordinate(4, 17), false));
 			}
 			
+			if(getPosition().equals(pathList.get(0).getCoordinate().toString())){
+				pathList.remove(0);
+			}
+			
+		//}
+			
+		if(previousDriver == null){
+			previousDriver = new FrontAlign_Forward();
 		}
 		
-		if(previousDriver == null || previousDriver.isDone(this)){
-			if(previousDriver == null){
-				previousDriver = new FrontAlign_Forward();
-			}
-			previousDriver.changeBehavior(this);
-		}
-		if(getCarNodeOrientation(null) > 90){
+		if(previousDriver.isDone(this)){
 			previousDriver.changeBehavior(this);
 		}
 		currentDriver.behave(this, delta);
@@ -100,24 +103,36 @@ public class MyAIController extends CarController{
 		}
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		Coordinate destCooridinate = destNode.getCoordinate();
+		Coordinate destCoordinate = destNode.getCoordinate();
 		float a = 1; // line stand for the car's orientation
 		float b; // line stand for the line between the two nodes
 		float c; // the other line of the triangle
 		Coordinate orientCoordinate = null;
 		switch(direction){
 		case NORTH:
-			orientCoordinate = new Coordinate(currentCoordinate.x, currentCoordinate.y + 1);	
+			orientCoordinate = new Coordinate(currentCoordinate.x, currentCoordinate.y + 1);
+			if(currentCoordinate.x == destCoordinate.x && currentCoordinate.y > destCoordinate.y){
+				return 180;
+			}
 		case SOUTH:
 			orientCoordinate = new Coordinate(currentCoordinate.x, currentCoordinate.y - 1);
+			if(currentCoordinate.x == destCoordinate.x && currentCoordinate.y < destCoordinate.y){
+				return 180;
+			}
 		case WEST:
 			orientCoordinate = new Coordinate(currentCoordinate.x - 1, currentCoordinate.y);
+			if(currentCoordinate.x < destCoordinate.x && currentCoordinate.y == destCoordinate.y){
+				return 180;
+			}
 		case EAST:
 			orientCoordinate = new Coordinate(currentCoordinate.x + 1, currentCoordinate.y);
+			if(currentCoordinate.x > destCoordinate.x && currentCoordinate.y == destCoordinate.y){
+				return 180;
+			}
 		}
-		b = (float) Math.sqrt(Math.pow(currentCoordinate.x - destCooridinate.x, 2) + Math.pow(currentCoordinate.y - destCooridinate.y, 2));
-		c = (float) Math.sqrt(Math.pow(orientCoordinate.x - destCooridinate.x, 2) + Math.pow(orientCoordinate.y - destCooridinate.y, 2));
-		return (float) Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2.0 * a * b));
+		b = (float) Math.sqrt(Math.pow(currentCoordinate.x - destCoordinate.x, 2) + Math.pow(currentCoordinate.y - destCoordinate.y, 2));
+		c = (float) Math.sqrt(Math.pow(orientCoordinate.x - destCoordinate.x, 2) + Math.pow(orientCoordinate.y - destCoordinate.y, 2));
+		return (float) Math.toDegrees((float) Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2.0 * a * b)));
 	}
 	
 	/**
@@ -127,30 +142,30 @@ public class MyAIController extends CarController{
 	public boolean detectCollision(){
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		switch(direction){
-		case NORTH:
+		//switch(direction){
+		//case NORTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1).getName().equals("Wall")){
 				return true;
 			}
-			break;
-		case SOUTH:
+		//	break;
+		//case SOUTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1).getName().equals("Wall")){
 				return true;
 			}
-			break;
-		case WEST:
+		//	break;
+		//case WEST:
 			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-			break;
-		case EAST:
+		//	break;
+		//case EAST:
 			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-			break;
-		default:
-			break;
-		}
+		//	break;
+		//default:
+		//	break;
+		//}
 		return false;
 	}
 	
@@ -161,30 +176,30 @@ public class MyAIController extends CarController{
 	public boolean detectGrassEdge(){
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		switch(direction){
-		case NORTH:
+		//switch(direction){
+		//case NORTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1) instanceof GrassTrap){
 				return true;
 			}
-			break;
-		case SOUTH:
+		//	break;
+		//case SOUTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1) instanceof GrassTrap){
 				return true;
 			}
-			break;
-		case WEST:
+		//	break;
+		//case WEST:
 			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y) instanceof GrassTrap){
 				return true;
 			}
-			break;
-		case EAST:
+		//	break;
+		//case EAST:
 			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y) instanceof GrassTrap){
 				return true;
 			}
-			break;
-		default:
-			break;
-		}
+		//	break;
+		//default:
+		//	break;
+		//}
 		return false;
 	}
 	

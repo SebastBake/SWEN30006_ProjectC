@@ -14,7 +14,7 @@ public class SimpleReverse extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
-		return false;
+		return true;
 	}
 
 }

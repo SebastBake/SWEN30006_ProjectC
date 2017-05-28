@@ -33,7 +33,6 @@ public class RearAlign_Reverse extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
-		
 		return true;
 	}
 
