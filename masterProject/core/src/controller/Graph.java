@@ -69,8 +69,9 @@ public class Graph {
 		
 		printGraph();
 		
-		for (Object n: nodeMap.entrySet().toArray())  {
-			((Node) n).setCost(Float.MAX_VALUE);
+		for (Object key: nodeMap.keySet())  {
+			
+			nodeMap.get(key).setCost(Float.MAX_VALUE);
 		}
 		
 		return path;
