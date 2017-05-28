@@ -1,18 +1,19 @@
 package controller;
 
-import utilities.Coordinate;
-
 public class TrapDistanceCostStrategy extends CompositeCostStrategy {
+	private static final int BIG_NUMBER = 10000;	
 	
 	@Override
 	public float travelCost(Node fromNode, Node toNode) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
-	public float travelCost(Coordinate from, Node toNode) {
-		return 0;
+		
+		TrapCostStrategy trapCoster;
+		DistanceCostStrategy distanceCoster;
+		
+		float trapCost = trapCoster.travelCost(fromNode, toNode);
+		float distanceCost = distanceCoster.travelCost(fromNode, toNode);
+		
+		return distanceCost/BIG_NUMBER + trapCost;
 	}
 
 }
