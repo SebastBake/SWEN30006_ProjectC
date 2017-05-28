@@ -1,4 +1,4 @@
-package controller;
+ package controller;
 
 import utilities.Coordinate;
 import world.*;
@@ -10,6 +10,8 @@ public class UTurn extends Driver {
 	private WorldSpatial.Direction previousDirection;
 	public static final float F_SPEED = 3;
 	public static final float SIDE_SPACE_REQ = 2;
+	
+	// Initialize the distance to make it only calculate this once
 	private int distToLeft = 10;
 	private int distToRight = 10;
 
@@ -20,6 +22,7 @@ public class UTurn extends Driver {
 		}
 		WorldSpatial.Direction direction = controller.getOrientation();
 		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		// only calculate this once
 		if(distToLeft == 10 && distToRight == 10){
 			switch(direction){
 			case NORTH:
@@ -64,12 +67,15 @@ public class UTurn extends Driver {
 				break;
 			}
 		}
+		
+		// control speed
 		if(controller.getVelocity() > F_SPEED){
 			controller.applyBrake();
 		}
 		if(controller.getVelocity() < F_SPEED){
 			controller.applyForwardAcceleration();
 		}
+		
 		if(distToLeft > distToRight){
 			// keep turn left until the car is heading opposite direction
 			controller.turnLeft(delta);
@@ -80,6 +86,9 @@ public class UTurn extends Driver {
 	}
 
 	@Override
+	/**
+	 * It's considered done when the car faces the opposite direction
+	 */
 	public boolean isDone(MyAIController controller) {
 		WorldSpatial.Direction direction = controller.getOrientation();
 		switch(previousDirection){
@@ -105,10 +114,6 @@ public class UTurn extends Driver {
 			break;
 		}
 		return false;
-	}
-	
-	public String toString(){
-		return "UTurn";
 	}
 
 }
