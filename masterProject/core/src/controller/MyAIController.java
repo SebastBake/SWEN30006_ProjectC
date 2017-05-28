@@ -11,15 +11,26 @@ import world.World;
 import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	
+	// graph object to store nodes in the maze
 	private Graph graph;
+	
+	// the path list that the car should be on sequentially
 	public LinkedList<Node> pathList = new LinkedList<Node>();
+	
+	// keep track of the driver
 	private Driver currentDriver;
 	private Driver previousDriver;
+	
+	// keep track of the angle of the car
 	private float carAngle;
+	
+	// keep track of the location of the car
 	public Coordinate currentLoc;
 	private Coordinate previousLoc;
+
 	private HashMap<Coordinate, MapTile> currentView;
+	
+	// keep track of the view, hence the whole visited maze
 	private HashMap<Coordinate, MapTile> previousViews;
 	
 	public MyAIController(Car car) {
@@ -39,8 +50,8 @@ public class MyAIController extends CarController{
 		
 		currentDriver = new FrontAlign_Forward();
 		previousDriver = currentDriver;
-		
-		System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
+		//Troubleshooting print
+		//System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
 	}
 
 	@Override
@@ -48,28 +59,32 @@ public class MyAIController extends CarController{
 		updateLocation();
 		updateAngle();
 		
+		//When you move to a new square, update the graph
 		if(!previousLoc.equals(currentLoc)){
 			updateViews();
 			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
 			pathList = graph.getPathList(new Coordinate(getPosition()), carAngle);
-			System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
+			//Troubleshooting print
+			//System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
 			
 		}
 		
 		if(getPosition().equals(pathList.getFirst().getCoordinate().toString())){
+			// Remove a node once it is reached
 			pathList.remove(0);
 		}
 		
 		if(currentDriver.isDone(this)){
+			// Change out the driver once it has finished its manoevre
 			previousDriver.changeBehavior(this);
 		}
-		
+		// Make the car go
 		currentDriver.behave(this, delta);
 		
 	}
 
 	/**
-	 * Update Driver
+	 * Update Driver - Helper
 	 * @param newDriver
 	 */
 	public void newDriver(Driver newDriver){
@@ -79,7 +94,7 @@ public class MyAIController extends CarController{
 	}
 	
 	/**
-	 * Update currentTile
+	 * Update currentTile - Helper
 	 */
 	private void updateLocation(){
 		previousLoc = currentLoc;
@@ -87,14 +102,14 @@ public class MyAIController extends CarController{
 	}
 	
 	/**
-	 * Update currentTile
+	 * Update currentTile - Helper
 	 */
 	private void updateAngle(){
 		carAngle = (float) Math.toDegrees(Math.atan2(getRawVelocity().y, getRawVelocity().x));
 	}
 	
 	/**
-	 * Update currentView and previousViews
+	 * Update currentView and previousViews - Helper
 	 */
 	private void updateViews(){
 		
@@ -105,7 +120,7 @@ public class MyAIController extends CarController{
 	/**
 	 * 
 	 * Calculate the angle of the current Node and the destination Node
-	 * 
+	 *  - Helper
 	 * @return the angle of the current Node and the destination Node
 	 */
 	public float getCarNodeOrientation(Node toNode){

@@ -7,8 +7,13 @@ public abstract class Driver {
 
 	public Driver changeBehavior(MyAIController controller){
 		float angle = ((float) Math.toDegrees(controller.getCarNodeOrientation(null) ));
-		System.out.println(angle);
+		//Debug comment:
+		//System.out.println(angle);
 		Driver driver;
+		/**
+		 * Pick a Driver: Makes a deduction on which driver should be used based on
+		 * the current state.
+		 */
 		if(controller.detectCollision()){
 			driver = new SimpleReverse();
 		} else if(java.lang.Math.abs(angle) <= 90){
@@ -29,7 +34,8 @@ public abstract class Driver {
 			}
 			
 		}
-		System.out.println(driver.toString());
+		//Debug comment:
+		//System.out.println(driver.toString());
 		controller.newDriver(driver);
 		return driver;
 		
