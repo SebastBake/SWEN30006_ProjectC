@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.math.Circle;
-
 import tiles.*;
 import utilities.Coordinate;
 import world.World;
@@ -23,6 +21,12 @@ public class Graph {
 	public Graph() {
 		nodeMap = new HashMap<Coordinate, Node>();
 		coster = new DistanceCostStrategy();
+	}
+	
+	private void printGraph() {
+		for (Object n: nodeMap.entrySet().toArray()) {
+			System.out.println("Printing graph: " + n.toString());
+		}
 	}
 	
 	
@@ -70,8 +74,8 @@ public class Graph {
 			}
 		}
 		path.push(next);
-		System.out.println("nextNode: " + next.getCoordinate().toString());
 		
+		printGraph();
 		return path;
 	}
 	

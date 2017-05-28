@@ -103,6 +103,11 @@ public class Node {
 	public void setUnexplored(boolean unexplored){
 		this.unexplored = unexplored;
 	}
+	
+	@Override
+	public String toString() {
+		return "Node x=" + coordinate.x + ", y=" +coordinate.y + ", unexplored=" + unexplored + ", exit" + exitTile;
+	}
 
 	
 

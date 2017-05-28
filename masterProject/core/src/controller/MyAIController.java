@@ -3,8 +3,6 @@ package controller;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.Gdx;
-
 import tiles.GrassTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -49,11 +47,11 @@ public class MyAIController extends CarController{
 			updateViews();
 			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
 			pathList = graph.getPathList(new Coordinate(getPosition()));
-					
-			if(getPosition().equals(pathList.getFirst().getCoordinate().toString())){
-				pathList.remove(0);
-			}
 			
+		}
+		
+		if(getPosition().equals(pathList.getFirst().getCoordinate().toString())){
+			pathList.remove(0);
 		}
 		
 		if(previousDriver.isDone(this)){
@@ -61,6 +59,7 @@ public class MyAIController extends CarController{
 		}
 		
 		currentDriver.behave(this, delta);
+		// System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class MyAIController extends CarController{
 	 */
 	public float getCarNodeOrientation(Node destNode){
 		if(destNode == null){
-			destNode = pathList.get(0);
+			destNode = pathList.getFirst();
 		}
 		Coordinate currentCoordinate = new Coordinate(getPosition());
 		Coordinate destCoordinate = destNode.getCoordinate();
