@@ -3,7 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 import tiles.*;
 import utilities.Coordinate;
@@ -44,7 +43,7 @@ public class Graph {
 	 * @param previousViews
 	 * @return
 	 */
-	public List<Node> getPathList(Coordinate currentPos){
+	public LinkedList<Node> getPathList(Coordinate currentPos){
 
 		Node next = generateBestDestination(currentPos);
 		LinkedList<Node> path = new LinkedList<Node>();
@@ -199,8 +198,8 @@ public class Graph {
 		Coordinate helper = new Coordinate(currentPos.x, currentPos.y);
 		
 		// check EAST
-		i = 3;
-		for(j = -2; j <= 3; j++){
+		i = 4;
+		for(j = -3; j <= 4; j++){
 			helper.x = currentPos.x+i;
 			helper.y = currentPos.y+j;
 			
@@ -211,8 +210,8 @@ public class Graph {
 		}
 		
 		// check NORTH
-		j = 3;
-		for(i = -3; i <= 2; i++){
+		j = 4;
+		for(i = -4; i <= 3; i++){
 			helper.x = currentPos.x+i;
 			helper.y = currentPos.y+j;
 			
@@ -223,8 +222,8 @@ public class Graph {
 		}
 		
 		// check WEST
-		i = -3;
-		for(i = -3; i <= 2; i++){
+		i = -4;
+		for(i = -4; i <= 3; i++){
 			helper.x = currentPos.x+i;
 			helper.y = currentPos.y+j;
 			
@@ -235,8 +234,8 @@ public class Graph {
 		}
 		
 		// check SOUTH
-		j = -3;
-		for(i = -2; i <= 3; i++){
+		j = -4;
+		for(i = -3; i <= 4; i++){
 			helper.x = currentPos.x+i;
 			helper.y = currentPos.y+j;
 			
@@ -294,10 +293,18 @@ public class Graph {
 	 * @param c2 end coordinate
 	 * @return an ArrayList of MapTile representing all the MapTile that the line has
 	 */
-	private ArrayList<MapTile> lineOfSight(Coordinate c1, Coordinate c2) {
-		double gradient = (c2.y - c1.y)/(c2.x - c1.x);
+	private LinkedList<MapTile> lineOfSight(Coordinate c1, Coordinate c2) {
+		
+		LinkedList<MapTile> tiles = new LinkedList<MapTile>();
+		
+		if (c1.equals(c2)) {
+			tiles.push(World.lookUp(c1.x, c2.y));
+			return tiles;
+		}
+		
+		double angle = Math.atan2(c2.y - c1.y, c2.x - c1.x);
 		double length = Math.hypot(c2.y - c1.y, c2.x - c1.x);
-		double res = 0.1; 
+		double res = 0.2; 
 		Coordinate point = new Coordinate(c1.x, c1.y);
 		
 		MapTile previousTile = World.lookUp(point.x, point.y);
@@ -306,16 +313,12 @@ public class Graph {
 		double xchange =0;
 		double ychange =0;
 		
-		ArrayList<MapTile> tiles = new ArrayList<MapTile>();
-		
 		for (double line = 0; line < length ; line =+ res) {
-			xchange =Math.sqrt( Math.pow(res,2) / ( 1 + Math.pow(gradient,2)) );
-			ychange =xchange*gradient;
-			point.x =(int) Math.round(point.x + xchange);
-			point.y =(int) Math.round(point.y + ychange);
+			xchange =res*Math.cos(angle);
+			ychange =res*Math.sin(angle);
 			
 			previousTile = currentTile;
-			currentTile = World.lookUp(point.x, point.y);
+			currentTile = World.lookUp(point.x + xchange, point.y + ychange);
 			if (currentTile!=previousTile) {
 				tiles.add(currentTile);
 			}
@@ -331,7 +334,7 @@ public class Graph {
 	 * @return an ArrayList of MapTile representing all the MapTile that the line has
 	 */
 	private boolean walledPath(Coordinate c1, Coordinate c2) {
-		ArrayList<MapTile> tiles = lineOfSight(c1, c2);
+		LinkedList<MapTile> tiles = lineOfSight(c1, c2);
 		
 		for(MapTile t : tiles) {
 			if (t.getName().equals("Wall")) {

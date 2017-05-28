@@ -2,7 +2,6 @@ package controller;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 import tiles.GrassTrap;
 import tiles.MapTile;
@@ -14,49 +13,52 @@ import world.WorldSpatial;
 public class MyAIController extends CarController{
 	
 	private Graph graph;
-	public List<Node> pathList = new LinkedList<Node>();
+	public LinkedList<Node> pathList = new LinkedList<Node>();
 	private Driver currentDriver;
 	private Driver previousDriver;
-	private MapTile currentTile;
-	private MapTile previousTile;
+	private Coordinate currentLoc;
+	private Coordinate previousLoc;
 	private HashMap<Coordinate, MapTile> currentView;
 	private HashMap<Coordinate, MapTile> previousViews;
 	
 	public MyAIController(Car car) {
 		super(car);
+		
+		currentLoc = new Coordinate(getPosition());
+		previousLoc = currentLoc;
+		
+		currentView = getView();
+		previousViews = new HashMap<Coordinate, MapTile>();
+		previousViews.putAll(currentView);
+		
 		graph = new Graph();
+		graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
+		pathList = graph.getPathList(new Coordinate(getPosition()));
+		
+		currentDriver = new FrontAlign_Forward();
+		previousDriver = currentDriver;
+		
 	}
 
 	@Override
 	public void update(float delta) {
-		updateCurrentTile();
-		updateViews();
-		//if(previousTile == null || !previousTile.equals(currentTile)){
-			//updateViews();
-			//graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
-			// pathList = graph.getPathList(currentView, previousViews);
-			/*
-			 * for testing
-			 */
-			if(pathList.isEmpty()){
-				pathList.add(new Node(new Coordinate(4, 17), false));
-				pathList.add(new Node(new Coordinate(7, 17), false));
-				pathList.add(new Node(new Coordinate(4, 17), false));
-			}
-			
-			if(getPosition().equals(pathList.get(0).getCoordinate().toString())){
+		updateLocation();
+		
+		if(!previousLoc.equals(currentLoc)){
+			updateViews();
+			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
+			pathList = graph.getPathList(new Coordinate(getPosition()));
+					
+			if(getPosition().equals(pathList.getFirst().getCoordinate().toString())){
 				pathList.remove(0);
 			}
 			
-		//}
-			
-		if(previousDriver == null){
-			previousDriver = new FrontAlign_Forward();
 		}
 		
 		if(previousDriver.isDone(this)){
 			previousDriver.changeBehavior(this);
 		}
+		
 		currentDriver.behave(this, delta);
 	}
 
@@ -65,6 +67,7 @@ public class MyAIController extends CarController{
 	 * @param newDriver
 	 */
 	public void newDriver(Driver newDriver){
+		
 		previousDriver = currentDriver;
 		currentDriver = newDriver;
 	}
@@ -72,22 +75,17 @@ public class MyAIController extends CarController{
 	/**
 	 * Update currentTile
 	 */
-	private void updateCurrentTile(){
-		previousTile = currentTile;
-		Coordinate currentCoordinate = new Coordinate(getPosition());
-		currentTile = World.lookUp(currentCoordinate.x, currentCoordinate.y);
+	private void updateLocation(){
+		previousLoc = currentLoc;
+		currentLoc = new Coordinate(getPosition());
 	}
 	
 	/**
 	 * Update currentView and previousViews
 	 */
 	private void updateViews(){
-		if(previousViews == null){
-			previousViews = currentView;
-		} else {
-			previousViews.putAll(currentView);
-		}
 		
+		previousViews.putAll(currentView);
 		currentView = getView();
 	}
 		

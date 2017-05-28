@@ -35,6 +35,7 @@ public class Node {
 		}
 		travelCost = Float.MAX_VALUE;
 		starter = false;
+		edges = new ArrayList<Edge>();
 	}
 
 	/**
