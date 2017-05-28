@@ -18,7 +18,7 @@ public class MyAIController extends CarController{
 	public LinkedList<Node> pathList = new LinkedList<Node>();
 	private Driver currentDriver;
 	private Driver previousDriver;
-	private Coordinate currentLoc;
+	public Coordinate currentLoc;
 	private Coordinate previousLoc;
 	private HashMap<Coordinate, MapTile> currentView;
 	private HashMap<Coordinate, MapTile> previousViews;
