@@ -8,8 +8,10 @@ public class UTurn extends Driver {
 	// change made
 	// an attribute to store the previous Direction
 	private WorldSpatial.Direction previousDirection;
-	public static final float F_SPEED = 2;
+	public static final float F_SPEED = 3;
 	public static final float SIDE_SPACE_REQ = 2;
+	private int distToLeft = 10;
+	private int distToRight = 10;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {
@@ -18,9 +20,7 @@ public class UTurn extends Driver {
 		}
 		WorldSpatial.Direction direction = controller.getOrientation();
 		Coordinate currentPosition = new Coordinate(controller.getPosition());
-		int distToLeft = 10;
-		int distToRight = 10;
-		if(disToLeft == 10 && distToRight == 10){
+		if(distToLeft == 10 && distToRight == 10){
 			switch(direction){
 			case NORTH:
 				for(int i = 0 ; i < 3; i++){

@@ -163,30 +163,30 @@ public class MyAIController extends CarController{
 	public boolean detectCollision(){
 		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		//switch(direction){
-		//case NORTH:
+		switch(direction){
+		case NORTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
-		//case SOUTH:
+		break;
+		case SOUTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
-		//case WEST:
+		break;
+		case WEST:
 			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
-		//case EAST:
+		break;
+		case EAST:
 			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-		//	break;
-		//default:
-		//	break;
-		//}
+		break;
+		default:
+		break;
+		}
 		return false;
 	}
 	
