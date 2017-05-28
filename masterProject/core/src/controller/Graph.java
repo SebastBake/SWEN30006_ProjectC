@@ -324,7 +324,7 @@ public class Graph {
 		double xchange =0;
 		double ychange =0;
 		
-		for (double line = 0; line < length ; line =+ res) {
+		for (double line = 0; line < length ; line = line + res) {
 			xchange =res*Math.cos(angle);
 			ychange =res*Math.sin(angle);
 			
