@@ -1,6 +1,7 @@
 package controller;
 
 import tiles.MapTile;
+import utilities.Coordinate;
 import world.World;
 
 public class TrapCostStrategy implements CostStrategy {
@@ -24,6 +25,11 @@ public class TrapCostStrategy implements CostStrategy {
 		}
 		// TODO Auto-generated method stub
 		return cost;
+	}
+
+	@Override
+	public float travelCost(Coordinate from, Node toNode) {
+		return this.travelCost(new Node(from, false), toNode);
 	}
 
 }

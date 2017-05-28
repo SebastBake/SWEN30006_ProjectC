@@ -1,5 +1,7 @@
 package controller;
 
+import utilities.Coordinate;
+
 public class TrapDistanceCostStrategy extends CompositeCostStrategy {
 	private static final int BIG_NUMBER = 10000;	
 	
@@ -14,6 +16,11 @@ public class TrapDistanceCostStrategy extends CompositeCostStrategy {
 		float distanceCost = distanceCoster.travelCost(fromNode, toNode);
 		
 		return distanceCost/BIG_NUMBER + trapCost;
+	}
+
+	@Override
+	public float travelCost(Coordinate from, Node toNode) {
+		return this.travelCost(new Node(from, false), toNode);
 	}
 
 }
