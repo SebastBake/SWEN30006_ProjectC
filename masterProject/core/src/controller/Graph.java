@@ -72,10 +72,15 @@ public class Graph {
 					next = e.getPartner(path.getFirst());
 				}
 			}
+			path.push(next);
 		}
-		path.push(next);
 		
 		printGraph();
+		
+		for (Object n: nodeMap.entrySet().toArray())  {
+			((Node) n).setCost(Float.MAX_VALUE);
+		}
+		
 		return path;
 	}
 	
@@ -122,6 +127,7 @@ public class Graph {
 						//visiting - set new cost and add new node to the queue
 						visiting.setCost( visitCost );
 						visiting.setStarter(false);
+						visiting.setPreviousNode(visitor);
 						visitQueue.push(visiting);
 						
 						// update best node

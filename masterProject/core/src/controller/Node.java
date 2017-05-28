@@ -84,6 +84,10 @@ public class Node {
 		return previous;
 	}
 	
+	public void setPreviousNode(Node n) {
+		previous = n;
+	}
+	
 	/**
 	 * Change made
 	 * Design flaw
