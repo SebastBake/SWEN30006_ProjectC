@@ -61,17 +61,9 @@ public class Graph {
 		Node next = generateBestDestination(currentPos);
 		LinkedList<Node> path = new LinkedList<Node>();
 		path.push(next);
-		boolean better = false;
 		
 		while (!next.isStarter()) {
-			
-			for (Edge e : path.getFirst().getEdges()) {
-				
-				better = e.getPartner(path.getFirst()).getCost() < next.getCost();
-				if (better) {
-					next = e.getPartner(path.getFirst());
-				}
-			}
+			next = next.getPreviousNode();
 			path.push(next);
 		}
 		
