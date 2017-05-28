@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.badlogic.gdx.math.Circle;
+
 import tiles.*;
 import utilities.Coordinate;
 import world.World;
@@ -68,6 +70,7 @@ public class Graph {
 			}
 		}
 		path.push(next);
+		System.out.println("nextNode: " + next.getCoordinate().toString());
 		
 		return path;
 	}
