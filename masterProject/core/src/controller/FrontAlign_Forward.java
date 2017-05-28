@@ -10,19 +10,19 @@ public class FrontAlign_Forward extends Driver {
 	public void behave(MyAIController controller, float delta) {
 		float angle = controller.getCarNodeOrientation(null);
 		float velocity = controller.getVelocity();
-		if(angle <= 45 && angle >= -45){
+		if(angle <= 10 && angle >= -10){
 			if(velocity < F_SPEED){
 				controller.applyForwardAcceleration();
 			}
 		} else {
-			if(angle < -45){
+			if(angle < -10){
 				if(velocity < T_SPEED){
 					controller.applyForwardAcceleration();
 				} else if(velocity > T_SPEED){
 					controller.applyBrake();
 				}
 				controller.turnLeft(delta);
-			} else if (angle > 45){
+			} else if (angle > 10){
 				if(velocity < T_SPEED){
 					controller.applyForwardAcceleration();
 				} else if(velocity > T_SPEED){

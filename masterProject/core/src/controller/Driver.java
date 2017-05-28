@@ -19,9 +19,8 @@ public abstract class Driver {
 			//	SimpleReverse is the slowest way to reverse,
 			//	so I assign that first and then if there is space I
 			//	change it to be a more suitable turning method
-			
-			float space = controller.getMaxSideSpace();
 			driver = new RearAlign_Reverse();
+			float space = controller.getMaxSideSpace();
 			
 			if(space >= UTurn.SIDE_SPACE_REQ){
 				driver = new UTurn();
