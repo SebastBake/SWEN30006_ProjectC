@@ -7,8 +7,8 @@ public class TrapDistanceCostStrategy extends CompositeCostStrategy {
 	public float travelCost(Node fromNode, Node toNode) {
 		// TODO Auto-generated method stub
 		
-		TrapCostStrategy trapCoster;
-		DistanceCostStrategy distanceCoster;
+		TrapCostStrategy trapCoster = new TrapCostStrategy();
+		DistanceCostStrategy distanceCoster = new DistanceCostStrategy();
 		
 		float trapCost = trapCoster.travelCost(fromNode, toNode);
 		float distanceCost = distanceCoster.travelCost(fromNode, toNode);
