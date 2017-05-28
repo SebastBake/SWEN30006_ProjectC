@@ -457,14 +457,14 @@ public class Graph {
 		
 		// is a corner of a wall? -- useful
 		// variables below are true if they are not walls;
-		boolean n  = !World.lookUp(center.x  , center.y+1).getName().equals("Wall");
-		boolean ne = !World.lookUp(center.x+1, center.y+1).getName().equals("Wall");
-		boolean e  = !World.lookUp(center.x+1, center.y  ).getName().equals("Wall");
-		boolean se = !World.lookUp(center.x+1, center.y-1).getName().equals("Wall");
-		boolean s  = !World.lookUp(center.x  , center.y-1).getName().equals("Wall");
-		boolean sw = !World.lookUp(center.x-1, center.y-1).getName().equals("Wall");
-		boolean w  = !World.lookUp(center.x-1, center.y  ).getName().equals("Wall");
-		boolean nw = !World.lookUp(center.x-1, center.y+1).getName().equals("Wall");
+		boolean n  = World.lookUp(center.x  , center.y+1).getName().equals("Wall");
+		boolean ne = World.lookUp(center.x+1, center.y+1).getName().equals("Wall");
+		boolean e  = World.lookUp(center.x+1, center.y  ).getName().equals("Wall");
+		boolean se = World.lookUp(center.x+1, center.y-1).getName().equals("Wall");
+		boolean s  = World.lookUp(center.x  , center.y-1).getName().equals("Wall");
+		boolean sw = World.lookUp(center.x-1, center.y-1).getName().equals("Wall");
+		boolean w  = World.lookUp(center.x-1, center.y  ).getName().equals("Wall");
+		boolean nw = World.lookUp(center.x-1, center.y+1).getName().equals("Wall");
 		if (!n && !e && ne) {return true;}
 		if (!s && !e && se) {return true;}
 		if (!s && !w && sw) {return true;}
