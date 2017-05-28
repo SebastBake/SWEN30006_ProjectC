@@ -5,11 +5,11 @@ public abstract class Driver {
 	
 	// change the current driver to another driver
 	public Driver changeBehavior(MyAIController controller){
-		float angle = ((float)Math.toDegrees( controller.getCarNodeOrientation(null) ));
+		float angle = ((float)/*Math.toDegrees( */controller.getCarNodeOrientation(null) );//);
 		System.out.println(angle);
 		Driver driver;
 		if(controller.detectCollision()){
-			driver = new  SimpleReverse();
+			driver = new SimpleReverse();
 		} else if(java.lang.Math.abs(angle) <= 90){
 			// Detect collisions and grass edges
 			driver = new FrontAlign_Forward();

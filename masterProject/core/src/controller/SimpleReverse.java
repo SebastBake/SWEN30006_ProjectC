@@ -8,7 +8,7 @@ public class SimpleReverse extends Driver {
 	public static final float T_SPEED = 2;
 	
 	public Coordinate currentCoord = null;
-	private boolean done = false;
+//	private boolean done = false;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {
@@ -17,9 +17,9 @@ public class SimpleReverse extends Driver {
 			currentCoord = tempCoord;
 		}
 		
-		if(currentCoord.x != tempCoord.x || currentCoord.y != tempCoord.y){
-			done = true;
-		}
+//		if(currentCoord.x != tempCoord.x || currentCoord.y != tempCoord.y){
+//			done = true;
+//		}
 		
 		if(controller.getVelocity() < R_SPEED){
 			controller.applyReverseAcceleration();

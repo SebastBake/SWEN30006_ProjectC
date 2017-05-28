@@ -82,17 +82,25 @@ public class UTurn extends Driver {
 		WorldSpatial.Direction direction = controller.getOrientation();
 		switch(previousDirection){
 		case NORTH:
-			if(direction.equals(WorldSpatial.Direction.SOUTH));
-			return true;
+			if(direction.equals(WorldSpatial.Direction.SOUTH)){
+				return true;
+			}	
+			break;
 		case SOUTH:
-			if(direction.equals(WorldSpatial.Direction.NORTH));
-			return true;
+			if(direction.equals(WorldSpatial.Direction.NORTH)){
+				return true;
+			}
+			break;
 		case WEST:
-			if(direction.equals(WorldSpatial.Direction.EAST));
-			return true;
+			if(direction.equals(WorldSpatial.Direction.EAST)){
+				return true;
+			}
+			break;
 		case EAST:
-			if(direction.equals(WorldSpatial.Direction.WEST));
-			return true;		
+			if(direction.equals(WorldSpatial.Direction.WEST)){
+				return true;
+			}
+			break;
 		}
 		return false;
 	}
