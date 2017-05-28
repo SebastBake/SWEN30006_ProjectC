@@ -98,38 +98,9 @@ public class MyAIController extends CarController{
 		if(destNode == null){
 			destNode = pathList.get(0);
 		}
-		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
 		Coordinate destCoordinate = destNode.getCoordinate();
-		float a = 1; // line stand for the car's orientation
-		float b; // line stand for the line between the two nodes
-		float c; // the other line of the triangle
-		Coordinate orientCoordinate = null;
-		switch(direction){
-		case NORTH:
-			orientCoordinate = new Coordinate(currentCoordinate.x, currentCoordinate.y + 1);
-			if(currentCoordinate.x == destCoordinate.x && currentCoordinate.y > destCoordinate.y){
-				return 180;
-			}
-		case SOUTH:
-			orientCoordinate = new Coordinate(currentCoordinate.x, currentCoordinate.y - 1);
-			if(currentCoordinate.x == destCoordinate.x && currentCoordinate.y < destCoordinate.y){
-				return 180;
-			}
-		case WEST:
-			orientCoordinate = new Coordinate(currentCoordinate.x - 1, currentCoordinate.y);
-			if(currentCoordinate.x < destCoordinate.x && currentCoordinate.y == destCoordinate.y){
-				return 180;
-			}
-		case EAST:
-			orientCoordinate = new Coordinate(currentCoordinate.x + 1, currentCoordinate.y);
-			if(currentCoordinate.x > destCoordinate.x && currentCoordinate.y == destCoordinate.y){
-				return 180;
-			}
-		}
-		b = (float) Math.sqrt(Math.pow(currentCoordinate.x - destCoordinate.x, 2) + Math.pow(currentCoordinate.y - destCoordinate.y, 2));
-		c = (float) Math.sqrt(Math.pow(orientCoordinate.x - destCoordinate.x, 2) + Math.pow(orientCoordinate.y - destCoordinate.y, 2));
-		return (float) Math.toDegrees((float) Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2.0 * a * b)));
+		return (float) Math.toDegrees((float) Math.atan((float)(destCoordinate.y - currentCoordinate.y)/(float)(destCoordinate.x - currentCoordinate.x)));
 	}
 	
 	/**
