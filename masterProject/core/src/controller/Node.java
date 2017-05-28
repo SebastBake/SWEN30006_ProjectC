@@ -10,7 +10,6 @@ import world.World;
 public class Node {
 	
 	private Coordinate coordinate;
-	private MapTile tile;
 	private boolean unexplored;
 	private boolean exitTile;
 	private Float travelCost;
@@ -25,28 +24,32 @@ public class Node {
 	 * @param unexplored
 	 */
 	public Node(Coordinate coordinate, boolean unexplored){
+		
 		this.coordinate = coordinate;
-		this.tile = World.lookUp(coordinate.x, coordinate.y);
 		this.unexplored = unexplored;
+		edges = new ArrayList<Edge>();
+		travelCost = Float.MAX_VALUE;
+		starter = false;
+		
+		MapTile tile = World.lookUp(coordinate.x, coordinate.y);
 		if(tile.getName().equals("Utility")){
 			if(((UtilityTile)tile).isExit()){
 				this.exitTile = true;
 			}
 		}
-		travelCost = Float.MAX_VALUE;
-		starter = false;
-		edges = new ArrayList<Edge>();
 	}
 
 	/**
-	 * @return the starter
+	 * starter boolean is used for path finding  in Graph.findBestDestination(...)
+	 * @return whether the node is a starter node
 	 */
 	public boolean isStarter() {
 		return starter;
 	}
 
 	/**
-	 * @param starter the starter to set
+	 * starter boolean is used for path finding in Graph.findBestDestination(...)
+	 * @param whether the node is a starter node
 	 */
 	public void setStarter(boolean starter) {
 		this.starter = starter;
@@ -55,15 +58,19 @@ public class Node {
 	public Coordinate getCoordinate(){
 		return coordinate;
 	}
-
-	public MapTile getMapTile(){
-		return tile;
-	}
 	
+	/**
+	 * is used for path finding in Graph.findBestDestination(...)
+	 * @return whether the node is over an exit tile
+	 */
 	public boolean isExitTile(){
 		return exitTile;
 	}
 	
+	/**
+	 * register an edge with the node
+	 * @param edge to register
+	 */
 	public void registerEdge(Edge edge){
 		edges.add(edge);
 	}
@@ -89,9 +96,8 @@ public class Node {
 	}
 	
 	/**
-	 * Change made
-	 * Design flaw
 	 * Get if the node is unexplored
+	 * boolean is used in Graph
 	 * @return whether the node is unexplored or not
 	 */
 	public boolean isUnexplored(){
@@ -99,9 +105,7 @@ public class Node {
 	}
 	
 	/**
-	 * Change made
-	 * Design flaw
-	 * Set the node as unexplored or not
+	 * Set the node as unexplored
 	 * @param unexplored
 	 */
 	public void setUnexplored(boolean unexplored){
@@ -112,7 +116,5 @@ public class Node {
 	public String toString() {
 		return "Node x=" + coordinate.x + ", y=" +coordinate.y + ", unexplored=" + unexplored + ", exit" + exitTile;
 	}
-
-	
 
 }

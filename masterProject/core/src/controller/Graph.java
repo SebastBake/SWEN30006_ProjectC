@@ -311,6 +311,7 @@ public class Graph {
 				// create and add edge
 				newEdge = new Edge(nodes.get(i), nodes.get(j));
 				nodes.get(i).registerEdge(newEdge);
+					//TODO: should register with both nodes here
 			}
 		}
 	}
