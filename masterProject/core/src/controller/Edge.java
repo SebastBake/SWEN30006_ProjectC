@@ -1,29 +1,23 @@
 package controller;
 
+/**
+ * Represents Edges in the graph
+ */
 public class Edge {
-	
-	// change made 
-	// remove the attribute ArrayList<MapTile> tiles
-	
-	private float angle;
-	private float length;
+
 	private Node node1;
 	private Node node2;
 	
 	public Edge(Node node1, Node node2){
 		this.node1 = node1;
 		this.node2 = node2;
-		this.length = (float)Math.hypot(node1.getCoordinate().x - node2.getCoordinate().x, 
-										node1.getCoordinate().y - node2.getCoordinate().y);
-		this.angle = (float)Math.atan((float)(node1.getCoordinate().y - node2.getCoordinate().y)/
-											(node1.getCoordinate().x - node2.getCoordinate().x));
 	}
 	
 	/**
-	 * Get the other partner node of the edge
+	 * Get the other node of the edge
 	 * If the argument is not one of the edge's nodes, return null
-	 * @param node
-	 * @return the other node
+	 * @param node is the node not returned
+	 * @return the other node which isn't the one which is the parameter of the method
 	 */
 	public Node getPartner(Node node){
 		if(node.getCoordinate().equals(node1.getCoordinate())){
@@ -33,14 +27,6 @@ public class Edge {
 			return node1;
 		}
 		return null;
-	}
-	
-	public float getAngle(){
-		return angle;
-	}
-	
-	public float getLength(){
-		return length;
 	}
 
 }

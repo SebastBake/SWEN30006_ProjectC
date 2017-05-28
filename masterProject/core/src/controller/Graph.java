@@ -25,6 +25,7 @@ public class Graph {
 	/**
 	 * helpful for debug
 	 */
+	@SuppressWarnings("unused")
 	private void printGraph() {
 		System.out.println("Printing graph:");
 		for (Object n: nodeMap.entrySet().toArray()) {
@@ -312,8 +313,6 @@ public class Graph {
 				nodes.get(i).registerEdge(newEdge);
 			}
 		}
-		
-		
 	}
 	
 	/**
@@ -326,17 +325,17 @@ public class Graph {
 		
 		LinkedList<MapTile> tiles = new LinkedList<MapTile>();
 		
+		// necessary if the two coordinates are the same
 		if (c1.equals(c2)) {
 			tiles.push(World.lookUp(c1.x, c2.y));
 			return tiles;
 		}
 		
-		double angle = Math.atan2(c2.y - c1.y, c2.x - c1.x);
-		double length = Math.hypot(c2.y - c1.y, c2.x - c1.x);
-		double res = 0.2;
 		
-		MapTile previousTile = World.lookUp(c1.x, c1.y);
-		MapTile currentTile = null;
+		// Follow a line between the two coordinates from c1 to c2, add tiles along the way
+		double angle = Math.atan2(c2.y - c1.y, c2.x - c1.x);	// line angle
+		double length = Math.hypot(c2.y - c1.y, c2.x - c1.x);	// line length
+		double res = 0.2;										// distance between tile samples
 		
 		double xchange =res*Math.cos(angle);
 		double ychange =res*Math.sin(angle);
@@ -348,21 +347,18 @@ public class Graph {
 			pointx = pointx + xchange;
 			pointy = pointy + ychange;
 			
-			previousTile = currentTile;
-			currentTile = World.lookUp(pointx, pointy);
-			if (currentTile!=previousTile) {
-				tiles.add(currentTile);
-			}
+			tiles.add(World.lookUp(c1.x, c1.y));
 		}
 		
 		return tiles;
 	}
 	
-	/** This is a helper method which wasn't in the original design
-	 * Returns true if there is a wall between two 
-	 * @param c1
-	 * @param c2
-	 * @return an ArrayList of MapTile representing all the MapTile that the line has
+	/**
+	 * This is a helper method which wasn't in the original design
+	 * Returns true if there is a wall between coordinates c1 and c2
+	 * @param c1 starting coordinate
+	 * @param c2 end coordinate
+	 * @return whether there is a wall between coordinates c1 and c2
 	 */
 	private boolean walledPath(Coordinate c1, Coordinate c2) {
 		LinkedList<MapTile> tiles = lineOfSight(c1, c2);
@@ -394,7 +390,7 @@ public class Graph {
 	/**
 	 * Add the given node to the HashMap
 	 * @param c is the location of the new node
-	 * @param unexplored is a boolean - true for unexplored
+	 * @param unexplored is a boolean - true for unexplored nodes
 	 */
 	private void addNode(Coordinate c, boolean unexplored){
 		int x = (int) Math.round(c.x);
@@ -405,8 +401,9 @@ public class Graph {
 	}
 	
 	/**
+	 * Find a node in the graph
 	 * @param c is the coordinate to lookup
-	 * @return node coordinate is inside the graph
+	 * @return node in the graph at the coordinate given
 	 */
 	private Node nodeLookup(Coordinate c) {
 		int x = (int) Math.round(c.x);
@@ -417,27 +414,32 @@ public class Graph {
 	}
 	
 	/**
-	 * Change made: decide if a given coordinate is a useful coordinate for a node
-	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile, also must not be a wall
+	 * Returns whether a node at the given coordinate would be useful
+	 * Useful nodes: 
+	 * 		- Outside corner of a wall or trap
+	 * 		- adjacent to a trap or an exit tile
+	 * 		- not a wall
+	 * 		- not already a node in the graph
+	 * 
 	 * @param center The coordinate of the tile which might be useful
+	 * @return whether a node at the given coordinate would be useful
 	 */
 	private boolean isUseful(Coordinate center) {
 		
-		
-		// not useful if there's already a node there
+		// false if there's already a node there
 		if (nodeLookup(center) != null) {
 			return false;
 		}
 		
 		MapTile tile = World.lookUp(center.x, center.y);
 		
-		// is a wall? -- not useful
+		// is a wall? -- return false
 		boolean isWall = tile.getName().equals("Wall");
 		if (isWall) {
 			return false;
 		}
 		
-		// is exit? -- useful
+		// is exit? -- return true
 		boolean isUtility = tile.getName().equals("Utility");
 		if (isUtility) {
 			if ( ( (UtilityTile) tile).isExit() ) {
@@ -445,7 +447,7 @@ public class Graph {
 			}
 		}
 		
-		// adjacent to a trap? -- useful
+		// adjacent to a trap? -- return true
 		boolean isTrap = tile.getName().equals("Trap");
 		if (!isTrap) {
 			Coordinate c = new Coordinate(0,0);
@@ -464,8 +466,8 @@ public class Graph {
 			}
 		}
 		
-		// is a corner of a wall? -- useful
-		// variables below are true if they are not walls;
+		// is the outside corner of a wall? -- return true
+		// variables below are true if they are walls;
 		boolean n  = World.lookUp(center.x  , center.y+1).getName().equals("Wall");
 		boolean ne = World.lookUp(center.x+1, center.y+1).getName().equals("Wall");
 		boolean e  = World.lookUp(center.x+1, center.y  ).getName().equals("Wall");
