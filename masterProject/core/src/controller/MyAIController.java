@@ -25,7 +25,7 @@ public class MyAIController extends CarController{
 	public MyAIController(Car car) {
 		super(car);
 		
-		carAngle = (float) Math.atan2(getRawVelocity().y, getRawVelocity().x);
+		updateAngle();
 		currentLoc = new Coordinate(getPosition());
 		previousLoc = currentLoc;
 		
@@ -117,7 +117,7 @@ public class MyAIController extends CarController{
 		float angle = (float) ((float) carAngle - Math.atan2(
 								currentLoc.y-toNode.getCoordinate().y, 
 								currentLoc.x-toNode.getCoordinate().x ));
-		
+		System.out.println(toNode.getCoordinate().toString() + " : " + angle);
 		return angle;
 	}
 	
