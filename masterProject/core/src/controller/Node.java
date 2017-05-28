@@ -16,6 +16,8 @@ public class Node {
 	private Float travelCost;
 	private ArrayList<Edge> edges;
 	private Node previous;
+	private boolean starter;
+	
 	
 	/**
 	 * Initialize the Node, assigning travel cost
@@ -32,6 +34,21 @@ public class Node {
 			}
 		}
 		travelCost = Float.MAX_VALUE;
+		starter = false;
+	}
+
+	/**
+	 * @return the starter
+	 */
+	public boolean isStarter() {
+		return starter;
+	}
+
+	/**
+	 * @param starter the starter to set
+	 */
+	public void setStarter(boolean starter) {
+		this.starter = starter;
 	}
 
 	public Coordinate getCoordinate(){

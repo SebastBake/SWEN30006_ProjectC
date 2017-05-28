@@ -7,8 +7,6 @@ public class DistanceCostStrategy implements CostStrategy {
 	@Override
 	public float travelCost(Node fromNode, Node toNode) {
 
-		
-
 		Coordinate node1 = fromNode.getCoordinate();
 		Coordinate node2 = toNode.getCoordinate();
 		
@@ -18,6 +16,17 @@ public class DistanceCostStrategy implements CostStrategy {
 		double distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
 		return (float)distance;
 
+	}
+	
+	@Override
+	public float travelCost(Coordinate from, Node toNode) {
+		Coordinate node2 = toNode.getCoordinate();
+		
+		float xDist = Math.max(from.x, node2.x) - Math.min(from.x, node2.x);
+		float yDist = Math.max(from.y, node2.y) - Math.min(from.y, node2.y);
+		
+		double distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+		return (float)distance;
 	}
 
 }

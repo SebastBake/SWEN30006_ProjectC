@@ -2,8 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import tiles.*;
 import utilities.Coordinate;
@@ -14,28 +14,127 @@ public class Graph {
 	private static final boolean EXPLORED = true;
 	
 	private HashMap<Coordinate, Node> nodeMap;
-	private CostStrategy costStrategy;
+	private CostStrategy coster;
 	
+	
+	public Graph() {
+		nodeMap = new HashMap<Coordinate, Node>();
+		coster = new DistanceCostStrategy();
+	}
+	
+	
+	/**
+	 * Updates all nodes and edges of the graph
+	 * @param currentPosition
+	 * @param currentView
+	 * @param previousViews
+	 */
 	public void updateGraph(
 			Coordinate currentPosition, 
 			HashMap<Coordinate, MapTile> currentView, 
 			HashMap<Coordinate, MapTile> previousViews){
 		updateUnexploredNodes(currentPosition, currentView);
-		updateExploredNodes(currentView, previousViews);
-		updateEdges();
+		updateExploredNodes(currentView);
+		updateEdges(currentPosition);
 	}
 	
-	public List<Node> getPathList(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
-		Node best = generateBestDestination();
-		return null;
+	/**
+	 * 
+	 * @param currentView
+	 * @param previousViews
+	 * @return
+	 */
+	public List<Node> getPathList(Coordinate currentPos){
+
+		Node next = generateBestDestination(currentPos);
+		LinkedList<Node> path = new LinkedList<Node>();
+		path.push(next);
+		boolean better = false;
+		
+		while (!next.isStarter()) {
+			
+			for (Edge e : path.getFirst().getEdges()) {
+				
+				better = e.getPartner(path.getFirst()).getCost() < next.getCost();
+				if (better) {
+					next = e.getPartner(path.getFirst());
+				}
+			}
+		}
+		path.push(next);
+		
+		return path;
 	}
 	
-	private Node generateBestDestination(){
-		return null;
+	/**
+	 * Uses a variant of dijstra's algorithm to find the bestdestination in the graph
+	 * @return the best destination
+	 */
+	private Node generateBestDestination(Coordinate currentPos){
+		
+		LinkedList<Node> visitQueue = new LinkedList<Node>();
+		ArrayList<Node> closeNodes = getNodesInRadius(4, currentPos);
+		Node best = null;
+		Node visitor = null;
+		Node visiting = null;
+		float visitCost = 0;
+		
+		// Add and cost nearby starter nodes
+		for (Node closeNode : closeNodes) {
+			if (!walledPath(currentPos, closeNode.getCoordinate())) {
+				closeNode.setCost( coster.travelCost(currentPos, closeNode) );
+				closeNode.setStarter(true);
+				visitQueue.add(closeNode);
+			}
+		}
+		best = visitQueue.peek(); // initialise best to be a random node to avoid null pointer exceptions
+		
+		// Iterate over all the nodes to visit
+		while (!visitQueue.isEmpty()) {
+			
+			visitor = visitQueue.removeLast();
+			
+			for (Edge e : visitor.getEdges()) {
+				
+				// visit each feasible node where the cost can be lowered
+				visiting = e.getPartner(visitor);
+				if (feasibleVisit(visitor, visiting)) {
+					visitCost = coster.travelCost(visitor, visiting);
+					if ( visiting.getCost() > visitCost) {
+						
+						//visiting - set new cost and add new node to the queue
+						visiting.setCost( visitCost );
+						visiting.setStarter(false);
+						visitQueue.push(visiting);
+						
+						// update best node
+						if (visiting.isUnexplored() && best.isUnexplored()) {
+							if (visiting.getCost() < best.getCost()) { 
+								visiting = best;
+							}
+						} else if (visiting.isExitTile() && !best.isExitTile()) {
+							visiting = best;
+						} else if (visiting.isExitTile() && best.isExitTile()) {
+							if (visiting.getCost() < best.getCost()) { 
+								visiting = best;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return best;
 	}
 	
+	/**
+	 * 
+	 * @param fromNode
+	 * @param toNode
+	 * @return
+	 */
 	private boolean feasibleVisit(Node fromNode, Node toNode){
-		return false;
+		return true;
 	}
 	
 	/**
@@ -49,6 +148,7 @@ public class Graph {
 		Node n = null;
 		ArrayList<Node> radList = new ArrayList<Node>();
 		
+		// search in every tile
 		for(int i = -radius;i<=radius; i++) {
 			for(int j = -radius;j<=radius; j++) {
 				helper.x = pos.x+i;
@@ -60,7 +160,7 @@ public class Graph {
 				}
 			}
 		}
-		return null;
+		return radList;
 	}
 	
 	/**
@@ -68,21 +168,17 @@ public class Graph {
 	 * Add viewed nodes into the graph (only useful nodes which have an unobstructed path to are added)
 	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile
 	 * @param currentView
-	 * @param previousViews (not used)
 	 */
-	private void updateExploredNodes(HashMap<Coordinate, MapTile> currentView, HashMap<Coordinate, MapTile> previousViews){
+	private void updateExploredNodes(HashMap<Coordinate, MapTile> currentView){
+		
 		for(Coordinate viewedCoordinate : currentView.keySet()){
-			
 			// remove nodes which were previously unexplored
 			if ( nodeMap.containsKey(viewedCoordinate) ) {
-				if (nodeMap.get(viewedCoordinate).isUnexplored()) {
-					removeNode(viewedCoordinate);
-				}
+				if ( nodeMap.get(viewedCoordinate).isUnexplored() ) { removeNode(viewedCoordinate); }
 			}
 			
-			if(isUseful(viewedCoordinate)){
-				addNode(viewedCoordinate, EXPLORED);
-			}
+			// create new useful explored nodes
+			if(isUseful(viewedCoordinate)){ addNode(viewedCoordinate, EXPLORED); }
 		}
 		
 	}
@@ -157,8 +253,39 @@ public class Graph {
 	/**
 	 * Draws edges between every pair of nodes in the view which have a clear path between them (use lineOfSight()).
 	 * Don't draw edges already in the graph.
+	 * @param pos The position from which to update edges
 	 */
-	private void updateEdges(){
+	private void updateEdges(Coordinate pos){
+		
+		ArrayList<Node> nodes = getNodesInRadius(4, pos);
+		ArrayList<Edge> edges = null;
+		boolean walled = true;
+		Edge newEdge = null;
+		
+		// for each of the node combinations near the car
+		for (int i=0; i<nodes.size(); i++) {
+			for (int j=i+1; j<nodes.size(); j++) {
+				
+				// don't have an edge to itself
+				if (nodes.get(i).equals(nodes.get(j))) { continue; }
+				
+				// don't add an edge that's already there
+				edges = nodes.get(i).getEdges();
+				for (Edge e : edges) {
+					if (e.getPartner(nodes.get(i)).equals(nodes.get(j))) { continue; }
+				}
+				
+				// don't add an inaccessible edge
+				walled = walledPath( nodes.get(i).getCoordinate(), nodes.get(j).getCoordinate() );
+				if (walled) { continue; }
+				
+				// create and add edge
+				newEdge = new Edge(nodes.get(i), nodes.get(j));
+				nodes.get(i).registerEdge(newEdge);
+			}
+		}
+		
+		
 	}
 	
 	/**
@@ -258,33 +385,36 @@ public class Graph {
 	/**
 	 * Change made: decide if a given coordinate is a useful coordinate for a node
 	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile, also must not be a wall
+	 * @param center The coordinate of the tile which might be useful
 	 */
 	private boolean isUseful(Coordinate center) {
+		
 		
 		// not useful if there's already a node there
 		if (nodeLookup(center) != null) {
 			return false;
 		}
 		
-		boolean isWall = World.lookUp(center.x, center.y).getName().equals("Wall");
-		boolean isUtility = World.lookUp(center.x, center.y).getName().equals("Utility");
-		boolean isTrap = World.lookUp(center.x, center.y).getName().equals("Trap");
+		MapTile tile = World.lookUp(center.x, center.y);
 		
 		// is a wall? -- not useful
+		boolean isWall = tile.getName().equals("Wall");
 		if (isWall) {
 			return false;
 		}
 		
 		// is exit? -- useful
+		boolean isUtility = tile.getName().equals("Utility");
 		if (isUtility) {
-			if ( ( (UtilityTile) World.lookUp(center.x, center.y)).isExit() ) {
+			if ( ( (UtilityTile) tile).isExit() ) {
 				return true;
 			}
 		}
 		
 		// adjacent to a trap? -- useful
+		boolean isTrap = tile.getName().equals("Trap");
 		if (!isTrap) {
-			Coordinate c = new Coordinate(0,0); // side coordinate
+			Coordinate c = new Coordinate(0,0);
 			for(int i = -1; i <= 1; i++){
 				for(int j = -1; j <= 1; j++){
 					
@@ -292,7 +422,7 @@ public class Graph {
 					c.x = center.x + i;
 					c.y = center.y + j;
 					
-					if (World.lookUp(center.x, center.y).getName().equals("Trap")) {
+					if (World.lookUp(c.x, c.y).getName().equals("Trap")) {
 						return true;
 					}
 					
@@ -302,14 +432,14 @@ public class Graph {
 		
 		// is a corner of a wall? -- useful
 		// variables below are true if they are not walls;
-		boolean n	= !World.lookUp(center.x  , center.y+1).getName().equals("Wall");
-		boolean ne	= !World.lookUp(center.x+1, center.y+1).getName().equals("Wall");
-		boolean e	= !World.lookUp(center.x+1, center.y  ).getName().equals("Wall");
-		boolean se	= !World.lookUp(center.x+1, center.y-1).getName().equals("Wall");
-		boolean s	= !World.lookUp(center.x  , center.y-1).getName().equals("Wall");
-		boolean sw	= !World.lookUp(center.x-1, center.y-1).getName().equals("Wall");
-		boolean w	= !World.lookUp(center.x-1, center.y  ).getName().equals("Wall");
-		boolean nw	= !World.lookUp(center.x-1, center.y+1).getName().equals("Wall");
+		boolean n  = !World.lookUp(center.x  , center.y+1).getName().equals("Wall");
+		boolean ne = !World.lookUp(center.x+1, center.y+1).getName().equals("Wall");
+		boolean e  = !World.lookUp(center.x+1, center.y  ).getName().equals("Wall");
+		boolean se = !World.lookUp(center.x+1, center.y-1).getName().equals("Wall");
+		boolean s  = !World.lookUp(center.x  , center.y-1).getName().equals("Wall");
+		boolean sw = !World.lookUp(center.x-1, center.y-1).getName().equals("Wall");
+		boolean w  = !World.lookUp(center.x-1, center.y  ).getName().equals("Wall");
+		boolean nw = !World.lookUp(center.x-1, center.y+1).getName().equals("Wall");
 		if (n && e && ne) {return true;}
 		if (s && e && se) {return true;}
 		if (s && w && sw) {return true;}
