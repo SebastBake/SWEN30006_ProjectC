@@ -11,11 +11,17 @@ import world.World;
 import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	
+	// graph object to store nodes in the maze
 	private Graph graph;
+	
+	// the path list that the car should be on sequentially
 	public LinkedList<Node> pathList = new LinkedList<Node>();
+	
+	// keep track of the driver
 	private Driver currentDriver;
 	private Driver previousDriver;
+	
+	// keep track of the angle of the car
 	private float carAngle;
 	public Coordinate currentLoc;
 	private Coordinate previousLoc;

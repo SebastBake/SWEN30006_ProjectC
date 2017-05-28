@@ -8,21 +8,23 @@ import tiles.*;
 import utilities.Coordinate;
 import world.World;
 
+/**
+ * responsible for the graph and path finding
+ */
 public class Graph {
 	
-	// change made
-	// add a final boolean attribute to avoid magic booleans
 	private static final boolean UNEXPLORED = true;
-	
-	private HashMap<Coordinate, Node> nodeMap;
-	private CostStrategy coster;
-	
+	private HashMap<Coordinate, Node> nodeMap;	// Contains all of the nodes in the graph
+	private CostStrategy coster;				// Used in finding the shortest path
 	
 	public Graph() {
 		nodeMap = new HashMap<Coordinate, Node>();
-		coster = new DistanceCostStrategy();
+		coster = new TrapDistanceCostStrategy();
 	}
 	
+	/**
+	 * helpful for debug
+	 */
 	private void printGraph() {
 		System.out.println("Printing graph:");
 		for (Object n: nodeMap.entrySet().toArray()) {
@@ -32,19 +34,17 @@ public class Graph {
 	
 	
 	/**
-	 * Change made
-	 * Add the current position as a parameter
-	 * 
 	 * Updates all nodes and edges of the graph
-	 * @param currentPosition 
-	 * @param currentView
+	 * @param currentPosition current position of the car
+	 * @param currentView current view of the car
 	 * @param previousViews
 	 */
 	public void updateGraph(
 			Coordinate currentPosition, 
 			HashMap<Coordinate, MapTile> currentView, 
 			HashMap<Coordinate, MapTile> previousViews){
-		updateUnexploredNodes(currentPosition, currentView);
+		
+		updateUnexploredNodes(currentPosition, previousViews);
 		updateExploredNodes(currentView);
 		updateEdges(currentPosition);
 	}
@@ -58,39 +58,40 @@ public class Graph {
 	 * @return a linked list of nodes
 	 */
 	public LinkedList<Node> getPathList(Coordinate currentPos, float carAngle){
-
-		Node next = generateBestDestination(currentPos, carAngle);
+		
 		LinkedList<Node> path = new LinkedList<Node>();
+
+		// get end point using Dijstra
+		Node next = generateBestDestination(currentPos, carAngle);
 		path.push(next);
 		
+		// trace the end point back to the starting point for the path and place the nodes into the list
 		while (!next.isStarter()) {
 			next = next.getPreviousNode();
 			path.push(next);
 		}
 		
-		printGraph();
-		
+		// printGraph();
 		
 		return path;
 	}
 	
 	/**
-	 * Change made 
-	 * Add current position as parameter
-	 * 
-	 * Uses a variant of dijstra's algorithm to find the best destination in the graph
-	 * @param current position
-	 * @return the best destination
+	 * Uses a variant of Dijstra's algorithm to find the best destination in the graph
+	 * @param currentPos position of the car
+	 * @return the best end destination for the car
 	 */
 	private Node generateBestDestination(Coordinate currentPos, float carAngle){
 		
-		LinkedList<Node> visitQueue = new LinkedList<Node>();
-		ArrayList<Node> closeNodes = getNodesInRadius(4, currentPos);
+		ArrayList<Node> closeNodes = getNodesInRadius(4, currentPos); // potential starting points
+		LinkedList<Node> visitQueue = new LinkedList<Node>(); // queue used for generating the best destination
+		
 		Node best = null;
 		Node visitor = null;
 		Node visiting = null;
 		float visitCost = 0;
 		
+		// reset the graph so that all nodes have 
 		for (Object key: nodeMap.keySet())  {
 			nodeMap.get(key).setStarter(false);
 			nodeMap.get(key).setCost(Float.MAX_VALUE);
@@ -104,40 +105,45 @@ public class Graph {
 				visitQueue.add(closeNode);
 			}
 		}
-		best = visitQueue.peek(); // initialize best to be a random node to avoid null pointer exceptions
+		
+		// initialize best to be a random node to avoid null pointer exceptions
+		best = visitQueue.peek();
 		
 		// Iterate over all the nodes to visit
 		while (!visitQueue.isEmpty()) {
 			
 			visitor = visitQueue.removeLast();
 			
+			// visit each feasible node where the cost can be lowered
 			for (Edge e : visitor.getEdges()) {
-				
-				// visit each feasible node where the cost can be lowered
 				visiting = e.getPartner(visitor);
-				if (feasibleVisit(visitor, visiting)) {
-					visitCost = coster.travelCost(visitor, visiting, carAngle);
-					if ( visiting.getCost() > visitCost) {
+				visitCost = coster.travelCost(visitor, visiting, carAngle);
+				if (feasibleVisit(visitor, visiting) &&  visiting.getCost() > visitCost) {
 						
-						//visiting - set new cost and add new node to the queue
-						visiting.setCost( visitCost );
-						visiting.setStarter(false);
-						visiting.setPreviousNode(visitor);
-						visitQueue.push(visiting);
+					//visiting - set new cost and add new node to the queue
+					visiting.setCost( visitCost );
+					visiting.setStarter(false);
+					visiting.setPreviousNode(visitor);
+					visitQueue.push(visiting);
+					
+					// always avoid explored nodes
+					if (!best.isUnexplored() && visiting.isUnexplored()){
+						best = visiting;
+					
+					// always prioritise unexplored nodes with lowest cost
+					} else if (visiting.isUnexplored() && best.isUnexplored()) {
+						if (visiting.getCost() < best.getCost()) { 
+							best = visiting;
+						}
 						
-						// update best node
-						if (!best.isUnexplored() && visiting.isUnexplored()){
+					// always prioritise exit nodes
+					} else if (visiting.isExitTile() && !best.isExitTile()) {
+						best = visiting;
+						
+						// always prioritise exit nodes with lowest cost
+					} else if (visiting.isExitTile() && best.isExitTile()) {
+						if (visiting.getCost() < best.getCost()) { 
 							best = visiting;
-						}else if (visiting.isUnexplored() && best.isUnexplored()) {
-							if (visiting.getCost() < best.getCost()) { 
-								best = visiting;
-							}
-						} else if (visiting.isExitTile() && !best.isExitTile()) {
-							best = visiting;
-						} else if (visiting.isExitTile() && best.isExitTile()) {
-							if (visiting.getCost() < best.getCost()) { 
-								best = visiting;
-							}
 						}
 					}
 				}
@@ -148,10 +154,11 @@ public class Graph {
 	}
 	
 	/**
-	 * 
-	 * @param fromNode
-	 * @param toNode
-	 * @return
+	 * This method was intended take into account cases where the visits may not be feasible
+	 * Didn't have time to fully implement this method
+	 * @param fromNode node starting at
+	 * @param toNode node going to
+	 * @return whether the visit is feasible
 	 */
 	private boolean feasibleVisit(Node fromNode, Node toNode){
 		return true;
@@ -187,7 +194,7 @@ public class Graph {
 	 * Remove nodes which were previously unexplored but are now in the view
 	 * Add viewed nodes into the graph (only useful nodes which have an unobstructed path to are added)
 	 * Useful nodes: Outside corner of a wall or trap, adjacent to a trap or an exit tile
-	 * @param currentView
+	 * @param currentView is the list of tiles currently within the view of the car
 	 */
 	private void updateExploredNodes(HashMap<Coordinate, MapTile> currentView){
 		
@@ -204,19 +211,20 @@ public class Graph {
 	}
 	
 	/**
-	 * Change made: Add currentPosition as a parameter
 	 * Add unexplored nodes into the graph
 	 * Added nodes are just outside the view, have coordinates not recorded in the previous views, and have an unobstructed path to them
-	 * Change : Don't need currentView
-	 * @param currentPositon 
-	 * @param currentView
-	 * @param previousViews
+	 * Change : Don't need currentView as parameter, Add currentPosition as a parameter
+	 * @param currentPositon is the current position of the car
+	 * @param previousViews is the list of nodes previously seen by the car
 	 */
 	private void updateUnexploredNodes(Coordinate currentPos, HashMap<Coordinate, MapTile> previousViews){
 		
 		int j=0; // relative vertical distance from car
 		int i=0; // relative horizontal distance from car
 		Coordinate helper = new Coordinate(currentPos.x, currentPos.y);
+		
+		// This works by iterating over a border just outside the view of the car
+		// Adds any nodes on the border into the graph (subject to the conditions)
 		
 		// check EAST
 		i = 4;
