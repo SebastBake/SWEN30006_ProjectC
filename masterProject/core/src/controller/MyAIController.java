@@ -178,7 +178,8 @@ public class MyAIController extends CarController{
 				return angleBetween - 360;
 			}
 		}
-		System.out.println(toNode.getCoordinate().toString() + " : " + angleBetween);
+		//Debug
+		//System.out.println(toNode.getCoordinate().toString() + " : " + angleBetween);
 		return angleBetween;
 		
 	}
