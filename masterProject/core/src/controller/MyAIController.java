@@ -130,9 +130,9 @@ public class MyAIController extends CarController{
 			} 
 		}else{
 			if(toCoordinate.x > currentCoordinate.x){
-				toNodeAngle = 180;
-			}else{
 				toNodeAngle = 0;
+			}else{
+				toNodeAngle = 180;
 			}
 		}
 		if(toNodeAngle < 0){

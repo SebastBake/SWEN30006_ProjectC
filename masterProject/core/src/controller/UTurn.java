@@ -20,47 +20,49 @@ public class UTurn extends Driver {
 		Coordinate currentPosition = new Coordinate(controller.getPosition());
 		int distToLeft = 10;
 		int distToRight = 10;
-		switch(direction){
-		case NORTH:
-			for(int i = 0 ; i < 3; i++){
-				if(!World.lookUp(currentPosition.x - i, currentPosition.y).getName().equals("Road")){
-					distToLeft = i;
+		if(disToLeft == 10 && distToRight == 10){
+			switch(direction){
+			case NORTH:
+				for(int i = 0 ; i < 3; i++){
+					if(!World.lookUp(currentPosition.x - i, currentPosition.y).getName().equals("Road")){
+						distToLeft = i;
+					}
+					if(!World.lookUp(currentPosition.x + i, currentPosition.y).getName().equals("Road")){
+						distToRight = i;
+					}
 				}
-				if(!World.lookUp(currentPosition.x + i, currentPosition.y).getName().equals("Road")){
-					distToRight = i;
+				break;
+			case SOUTH:
+				for(int i = 0 ; i < 3; i++){
+					if(!World.lookUp(currentPosition.x + i, currentPosition.y).getName().equals("Road")){
+						distToLeft = i;
+					}
+					if(!World.lookUp(currentPosition.x - i, currentPosition.y).getName().equals("Road")){
+						distToRight = i;
+					}
 				}
+				break;
+			case WEST:
+				for(int i = 0 ; i < 3; i++){
+					if(!World.lookUp(currentPosition.x, currentPosition.y - i).getName().equals("Road")){
+						distToLeft = i;
+					}
+					if(!World.lookUp(currentPosition.x, currentPosition.y + i).getName().equals("Road")){
+						distToRight = i;
+					}
+				}
+				break;
+			case EAST:
+				for(int i = 0 ; i < 3; i++){
+					if(!World.lookUp(currentPosition.x, currentPosition.y + i).getName().equals("Road")){
+						distToLeft = i;
+					}
+					if(!World.lookUp(currentPosition.x, currentPosition.y - i).getName().equals("Road")){
+						distToRight = i;
+					}
+				}
+				break;
 			}
-			break;
-		case SOUTH:
-			for(int i = 0 ; i < 3; i++){
-				if(!World.lookUp(currentPosition.x + i, currentPosition.y).getName().equals("Road")){
-					distToLeft = i;
-				}
-				if(!World.lookUp(currentPosition.x - i, currentPosition.y).getName().equals("Road")){
-					distToRight = i;
-				}
-			}
-			break;
-		case WEST:
-			for(int i = 0 ; i < 3; i++){
-				if(!World.lookUp(currentPosition.x, currentPosition.y - i).getName().equals("Road")){
-					distToLeft = i;
-				}
-				if(!World.lookUp(currentPosition.x, currentPosition.y + i).getName().equals("Road")){
-					distToRight = i;
-				}
-			}
-			break;
-		case EAST:
-			for(int i = 0 ; i < 3; i++){
-				if(!World.lookUp(currentPosition.x, currentPosition.y + i).getName().equals("Road")){
-					distToLeft = i;
-				}
-				if(!World.lookUp(currentPosition.x, currentPosition.y - i).getName().equals("Road")){
-					distToRight = i;
-				}
-			}
-			break;
 		}
 		if(controller.getVelocity() > F_SPEED){
 			controller.applyBrake();
