@@ -23,9 +23,14 @@ public class MyAIController extends CarController{
 	
 	// keep track of the angle of the car
 	private float carAngle;
+	
+	// keep track of the location of the car
 	public Coordinate currentLoc;
 	private Coordinate previousLoc;
+
 	private HashMap<Coordinate, MapTile> currentView;
+	
+	// keep track of the view, hence the whole visited maze
 	private HashMap<Coordinate, MapTile> previousViews;
 	
 	public MyAIController(Car car) {
