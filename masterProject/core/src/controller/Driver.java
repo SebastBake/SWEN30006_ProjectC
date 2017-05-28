@@ -11,7 +11,7 @@ public abstract class Driver {
 			Driver driver = new FrontAlign_Forward();
 			
 			if(controller.detectCollision()){
-				driver = new RearAlign_Reverse();
+				driver = new SimpleReverse();
 			} else if (controller.detectGrassEdge()){
 				driver = new StopAndRedirect();
 			} //else {
@@ -20,6 +20,7 @@ public abstract class Driver {
 //			}
 			
 			controller.newDriver(driver);
+			System.out.println(driver.toString());
 			
 		} else {
 			//	SimpleReverse is the slowest way to reverse,
