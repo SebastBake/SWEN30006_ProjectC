@@ -16,12 +16,16 @@ public class FrontAlign_Forward extends Driver {
 			}
 		} else {
 			if(angle < 0){
-				if(velocity > T_SPEED){
+				if(velocity < T_SPEED){
+					controller.applyForwardAcceleration();
+				} else if(velocity > T_SPEED){
 					controller.applyBrake();
 				}
 				controller.turnRight(delta);
 			} else if (angle > 0){
-				if(velocity > T_SPEED){
+				if(velocity < T_SPEED){
+					controller.applyForwardAcceleration();
+				} else if(velocity > T_SPEED){
 					controller.applyBrake();
 				}
 				controller.turnLeft(delta);
