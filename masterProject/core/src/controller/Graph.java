@@ -324,21 +324,23 @@ public class Graph {
 		
 		double angle = Math.atan2(c2.y - c1.y, c2.x - c1.x);
 		double length = Math.hypot(c2.y - c1.y, c2.x - c1.x);
-		double res = 0.2; 
-		Coordinate point = new Coordinate(c1.x, c1.y);
+		double res = 0.2;
 		
-		MapTile previousTile = World.lookUp(point.x, point.y);
+		MapTile previousTile = World.lookUp(c1.x, c1.y);
 		MapTile currentTile = null;
 		
-		double xchange =0;
-		double ychange =0;
+		double xchange =res*Math.cos(angle);
+		double ychange =res*Math.sin(angle);
+		double pointx = c1.x;
+		double pointy = c1.y;
 		
-		for (double line = 0; line < length ; line = line + res) {
-			xchange =res*Math.cos(angle);
-			ychange =res*Math.sin(angle);
+		for (double line = 0; line < length; line = line + res) {
+			
+			pointx = pointx + xchange;
+			pointy = pointy + ychange;
 			
 			previousTile = currentTile;
-			currentTile = World.lookUp(point.x + xchange, point.y + ychange);
+			currentTile = World.lookUp(pointx, pointy);
 			if (currentTile!=previousTile) {
 				tiles.add(currentTile);
 			}
