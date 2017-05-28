@@ -10,7 +10,7 @@ public abstract class Driver {
 		System.out.println(angle);
 		if(controller.detectCollision()){
 			driver = new SimpleReverse();
-		} else if(java.lang.Math.abs(angle) <= 120){
+		} else if(java.lang.Math.abs(angle) <= 90){
 			// Detect collisions and grass edges
 			driver = new FrontAlign_Forward();
 			

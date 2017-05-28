@@ -113,12 +113,42 @@ public class MyAIController extends CarController{
 			toNode = pathList.getFirst();
 		
 		}
+		Coordinate currentCoordinate = new Coordinate(getPosition());
+		Coordinate toCoordinate = toNode.getCoordinate();
+		float angleBetween = 0;
+		float carToWest = getAngle();
+		float toNodeAngle = (float) Math.toDegrees(Math.atan((float)(toCoordinate.y - currentCoordinate.y)/(float)(toCoordinate.x - currentCoordinate.x)));
+		if(toCoordinate.y > currentCoordinate.y){
+			if(toNodeAngle < 0){
+				toNodeAngle = 180 + toNodeAngle;
+			}
+		}else if(toCoordinate.y < currentCoordinate.y){
+			if(toNodeAngle > 0){
+				toNodeAngle = 180 + toNodeAngle;
+			} else {
+				toNodeAngle = 360 + toNodeAngle;
+			} 
+		}else{
+			if(toCoordinate.x > currentCoordinate.x){
+				toNodeAngle = 180;
+			}else{
+				toNodeAngle = 0;
+			}
+		}
+		if(toNodeAngle < 0){
+			toNodeAngle = 360 + toNodeAngle;
+			
+		}
+		angleBetween = carToWest - toNodeAngle;
+		if(Math.abs(carToWest - toNodeAngle) > 180){
+			if(carToWest - toNodeAngle < 0){
+				return 360 + angleBetween;
+			}else{
+				return angleBetween - 360;
+			}
+		}
+		return angleBetween;
 		
-		float angle = (float) ((float) carAngle - Math.atan2(
-								currentLoc.y-toNode.getCoordinate().y, 
-								currentLoc.x-toNode.getCoordinate().x ));
-		
-		return (float) Math.toDegrees(angle);
 	}
 	
 	/**
