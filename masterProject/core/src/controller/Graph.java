@@ -24,8 +24,9 @@ public class Graph {
 	}
 	
 	private void printGraph() {
+		System.out.println("Printing graph:");
 		for (Object n: nodeMap.entrySet().toArray()) {
-			System.out.println("Printing graph: " + n.toString());
+			System.out.println(n.toString());
 		}
 	}
 	
@@ -192,7 +193,7 @@ public class Graph {
 		for(Coordinate viewedCoordinate : currentView.keySet()){
 			// remove nodes which were previously unexplored
 			if ( nodeMap.containsKey(viewedCoordinate) ) {
-				if ( nodeMap.get(viewedCoordinate).isUnexplored() ) { removeNode(viewedCoordinate); }
+				if ( nodeLookup(viewedCoordinate).isUnexplored() ) { removeNode(viewedCoordinate); }
 			}
 			
 			// create new useful explored nodes

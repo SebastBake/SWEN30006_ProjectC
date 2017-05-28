@@ -14,7 +14,7 @@ public class DistanceCostStrategy implements CostStrategy {
 		float yDist = Math.max(node1.y, node2.y) - Math.min(node1.y, node2.y);
 		
 		double distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-		return (float)distance;
+		return (float)distance + fromNode.getCost();
 
 	}
 	
