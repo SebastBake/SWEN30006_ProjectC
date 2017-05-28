@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import world.WorldSpatial;
 public class MyAIController extends CarController{
 	
 	private Graph graph;
-	public List<Node> pathList;
+	public List<Node> pathList = new ArrayList<Node>();
 	private Driver currentDriver;
 	private Driver previousDriver;
 	private MapTile currentTile;
@@ -29,12 +30,28 @@ public class MyAIController extends CarController{
 	@Override
 	public void update(float delta) {
 		updateCurrentTile();
-		if(!previousTile.equals(currentTile)){
-			updateViews();
-			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
-			pathList = graph.getPathList(currentView, previousViews);
+		updateViews();
+		if(previousTile == null || !previousTile.equals(currentTile)){
+			//updateViews();
+			//graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
+			// pathList = graph.getPathList(currentView, previousViews);
+			/*
+			 * for testing
+			 */
+			if(pathList.isEmpty()){
+				pathList.add(new Node(new Coordinate(7, 17), false));
+				pathList.add(new Node(new Coordinate(4, 16), false));
+			}
+			
 		}
-		if(previousDriver.isDone(this)){
+		
+		if(previousDriver == null || previousDriver.isDone(this)){
+			if(previousDriver == null){
+				previousDriver = new FrontAlign_Forward();
+			}
+			previousDriver.changeBehavior(this);
+		}
+		if(getCarNodeOrientation(null) > 90){
 			previousDriver.changeBehavior(this);
 		}
 		currentDriver.behave(this, delta);

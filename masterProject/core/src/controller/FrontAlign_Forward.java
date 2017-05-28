@@ -1,5 +1,7 @@
 package controller;
 
+import utilities.Coordinate;
+
 public class FrontAlign_Forward extends Driver {
 	
 	public static final float F_SPEED = 4;
@@ -8,7 +10,7 @@ public class FrontAlign_Forward extends Driver {
 
 	@Override
 	public void behave(MyAIController controller, float delta) {
-		float angle = controller.getCarNodeOrientation();
+		float angle = controller.getCarNodeOrientation(null);
 		float velocity = controller.getVelocity();
 		if(angle == 0){
 			if(velocity < F_SPEED){
@@ -32,6 +34,11 @@ public class FrontAlign_Forward extends Driver {
 
 	@Override
 	public boolean isDone(MyAIController controller) {
+		Coordinate currentPosition = new Coordinate(controller.getPosition());
+		if(currentPosition.equals(controller.pathList.get(0))){
+			controller.pathList.remove(0);
+			return true;
+		}
 		return false;
 	}
 

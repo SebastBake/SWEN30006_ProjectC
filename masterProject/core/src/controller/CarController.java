@@ -113,7 +113,6 @@ public abstract class CarController {
 	 * Returns the view around your car (this is a 3x3 area)
 	 */
 	public HashMap<Coordinate,MapTile> getView(){
-		printInfo();
 		return car.getView();
 	}
 	
