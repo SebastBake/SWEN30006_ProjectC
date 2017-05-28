@@ -465,10 +465,10 @@ public class Graph {
 		boolean sw = !World.lookUp(center.x-1, center.y-1).getName().equals("Wall");
 		boolean w  = !World.lookUp(center.x-1, center.y  ).getName().equals("Wall");
 		boolean nw = !World.lookUp(center.x-1, center.y+1).getName().equals("Wall");
-		if (n && e && ne) {return true;}
-		if (s && e && se) {return true;}
-		if (s && w && sw) {return true;}
-		if (n && w && nw) {return true;}
+		if (!n && !e && ne) {return true;}
+		if (!s && !e && se) {return true;}
+		if (!s && !w && sw) {return true;}
+		if (!n && !w && nw) {return true;}
 		
 		return false;
 	}
