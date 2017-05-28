@@ -46,5 +46,8 @@ public class StopAndRedirect extends Driver {
 //		}
 		return true;
 	}
-
+	
+	public String toString(){
+		return "StopAndRedirect";
+	}
 }

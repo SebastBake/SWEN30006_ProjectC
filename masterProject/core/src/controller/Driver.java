@@ -6,21 +6,19 @@ public abstract class Driver {
 	// change the current driver to another driver
 	public Driver changeBehavior(MyAIController controller){
 		float angle = controller.getCarNodeOrientation(null);
-		if(java.lang.Math.abs(angle) <= 90){
+		Driver driver;
+		if(controller.detectCollision()){
+			driver = new SimpleReverse();
+		} else if(java.lang.Math.abs(angle) <= 120){
 			// Detect collisions and grass edges
-			Driver driver = new FrontAlign_Forward();
+			driver = new FrontAlign_Forward();
 			
-			if(controller.detectCollision()){
-				driver = new SimpleReverse();
-			} else if (controller.detectGrassEdge()){
+			if (controller.detectGrassEdge()){
 				driver = new StopAndRedirect();
 			} //else {
 //				Driver simpleDriver = new FrontAlign_Forward();
 //				controller.newDriver(simpleDriver);
 //			}
-			
-			controller.newDriver(driver);
-			System.out.println(driver.toString());
 			
 		} else {
 			//	SimpleReverse is the slowest way to reverse,
@@ -28,18 +26,15 @@ public abstract class Driver {
 			//	change it to be a more suitable turning method
 			
 			float space = controller.getMaxSideSpace();
-			Driver turn = new SimpleReverse();
-			
+			driver = new RearAlign_Reverse();
 			if(space >= UTurn.SIDE_SPACE_REQ){
-				turn = new UTurn();
+				driver = new UTurn();
 			} else if (space >= ThreePointTurn.SIDE_SPACE_REQ){
-				turn = new ThreePointTurn();
-			} else {
-				turn = new RearAlign_Reverse();
+				driver = new ThreePointTurn();
 			}
-			
-			controller.newDriver(turn);
 		}
+		System.out.println(driver.toString());
+		controller.newDriver(driver);
 		return null;
 		
 	}

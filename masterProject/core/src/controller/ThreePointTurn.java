@@ -273,5 +273,9 @@ public class ThreePointTurn extends Driver {
 		}
 		return false;
 	}
+	
+	public String toString(){
+		return "ThreePointTurn";
+	}
 
 }

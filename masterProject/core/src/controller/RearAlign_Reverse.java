@@ -10,18 +10,18 @@ public class RearAlign_Reverse extends Driver {
 	public void behave(MyAIController controller, float delta) {
 		float angle = controller.getCarNodeOrientation(null);
 		float velocity = controller.getVelocity();
-		if(angle == 0){
+		if(angle >= 120 && angle <= -120){
 			// not sure if this should be > or <
 			if(velocity > R_SPEED){
 				controller.applyReverseAcceleration();
 			}
 		} else {
-			if(angle < 0){
+			if(angle > 0){
 				if(velocity > T_SPEED){
 					controller.applyBrake();
 				}
 				controller.turnRight(delta);
-			} else if (angle > 0){
+			} else if (angle < 0){
 				if(velocity > T_SPEED){
 					controller.applyBrake();
 				}
@@ -36,4 +36,8 @@ public class RearAlign_Reverse extends Driver {
 		return true;
 	}
 
+	
+	public String toString(){
+		return "RearAlign_Reverse";
+	}
 }

@@ -38,5 +38,9 @@ public class FrontAlign_Forward extends Driver {
 	public boolean isDone(MyAIController controller) {
 		return true;
 	}
+	
+	public String toString(){
+		return "FrontAlign_Forward";
+	}
 
 }

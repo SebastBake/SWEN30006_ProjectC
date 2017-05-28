@@ -30,5 +30,9 @@ public class SimpleReverse extends Driver {
 	public boolean isDone(MyAIController controller) {
 		return true;
 	}
+	
+	public String toString(){
+		return "SimpleReverse";
+	}
 
 }
