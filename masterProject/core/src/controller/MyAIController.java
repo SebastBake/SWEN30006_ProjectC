@@ -37,6 +37,8 @@ public class MyAIController extends CarController{
 		
 		currentDriver = new FrontAlign_Forward();
 		previousDriver = currentDriver;
+		
+		System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
 	}
 
 	@Override
@@ -47,6 +49,7 @@ public class MyAIController extends CarController{
 			updateViews();
 			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
 			pathList = graph.getPathList(new Coordinate(getPosition()));
+			System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
 			
 		}
 		
@@ -59,7 +62,7 @@ public class MyAIController extends CarController{
 		}
 		
 		currentDriver.behave(this, delta);
-		// System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
+		
 	}
 
 	/**
