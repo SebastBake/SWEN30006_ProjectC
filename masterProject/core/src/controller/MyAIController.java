@@ -10,6 +10,11 @@ import world.Car;
 import world.World;
 import world.WorldSpatial;
 
+/**
+ * We tried to make it work
+ * But this implementation doesn't really make the car escape the maze successfully
+ *
+ */
 public class MyAIController extends CarController{
 	// graph object to store nodes in the maze
 	private Graph graph;
@@ -36,6 +41,7 @@ public class MyAIController extends CarController{
 	public MyAIController(Car car) {
 		super(car);
 		
+		/* initialize the controller */
 		updateAngle();
 		currentLoc = new Coordinate(getPosition());
 		previousLoc = currentLoc;
@@ -130,8 +136,12 @@ public class MyAIController extends CarController{
 		}
 		Coordinate currentCoordinate = new Coordinate(getPosition());
 		Coordinate toCoordinate = toNode.getCoordinate();
+		// store the angle between the car's heading direction and the destination node
 		float angleBetween = 0;
+		// store the angle of the car's heading direction
 		float carToWest = getAngle();
+		
+		// get the destination node's angle by taking West as the base direction (counter clock-wise)
 		float toNodeAngle = (float) Math.toDegrees(Math.atan((float)(toCoordinate.y - currentCoordinate.y)/(float)(toCoordinate.x - currentCoordinate.x)));
 		if(toCoordinate.y > currentCoordinate.y){
 			if(toNodeAngle < 0){
@@ -154,6 +164,12 @@ public class MyAIController extends CarController{
 			toNodeAngle = 360 + toNodeAngle;
 			
 		}
+		
+		// calculate the angle between these two counterparts
+		// -90 - 90 stands for in front of the car
+		// abs > 90 stands for behind the car
+		// positive stands for right
+		// negative stands for left
 		angleBetween = carToWest - toNodeAngle;
 		if(Math.abs(carToWest - toNodeAngle) > 180){
 			if(carToWest - toNodeAngle < 0){
@@ -164,10 +180,6 @@ public class MyAIController extends CarController{
 		}
 		System.out.println(toNode.getCoordinate().toString() + " : " + angleBetween);
 		return angleBetween;
-		// Aidan's solution
-		//	double nodeAngle = Math.atan2(toNode.getCoordinate().y, toNode.getCoordinate().x);
-		//	double magnitudeNode = Math.sqrt(Math.pow(toNode.getCoordinate().x, 2) + Math.pow(toNode.getCoordinate().y, 2));
-		//	return (float)Math.acos((toNode.getCoordinate().x - currentLoc.x) / (magnitudeNode * Math.sin(nodeAngle)));
 		
 	}
 	
@@ -177,22 +189,29 @@ public class MyAIController extends CarController{
 	 */
 	public boolean detectCollision(){
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		//case NORTH:
+		WorldSpatial.Direction orientation = getOrientation();
+		switch(orientation){
+		case NORTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1).getName().equals("Wall")){
 				return true;
 			}
-		//case SOUTH:
+			break;
+		case SOUTH:
 			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1).getName().equals("Wall")){
 				return true;
 			}
-		//case WEST:
+			break;
+		case WEST:
 			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
-		//case EAST:
+			break;
+		case EAST:
 			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y).getName().equals("Wall")){
 				return true;
 			}
+			break;
+		}
 		return false;
 	}
 	
@@ -201,24 +220,19 @@ public class MyAIController extends CarController{
 	 * @return if the car is at an edge of a grass trap
 	 */
 	public boolean detectGrassEdge(){
-		WorldSpatial.Direction direction = getOrientation();
 		Coordinate currentCoordinate = new Coordinate(getPosition());
-		//case NORTH:
-			if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1) instanceof GrassTrap){
-				return true;
-			}
-		//case SOUTH:
-			if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1) instanceof GrassTrap){
-				return true;
-			}
-		//case WEST:
-			if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y) instanceof GrassTrap){
-				return true;
-			}
-		//case EAST:
-			if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y) instanceof GrassTrap){
-				return true;
-			}
+		if(World.lookUp(currentCoordinate.x, currentCoordinate.y + 1) instanceof GrassTrap){
+			return true;
+		}
+		if(World.lookUp(currentCoordinate.x, currentCoordinate.y - 1) instanceof GrassTrap){
+			return true;
+		}
+		if(World.lookUp(currentCoordinate.x - 1, currentCoordinate.y) instanceof GrassTrap){
+			return true;
+		}
+		if(World.lookUp(currentCoordinate.x + 1, currentCoordinate.y) instanceof GrassTrap){
+			return true;
+		}
 		return false;
 	}
 	
