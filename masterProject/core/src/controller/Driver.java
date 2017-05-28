@@ -4,12 +4,15 @@ package controller;
 public abstract class Driver {
 	
 	// change the current driver to another driver
-	public void changeBehavior(MyAIController controller){
-		float angle = controller.getCarNodeOrientation(null);
+
+	public Driver changeBehavior(MyAIController controller){
+		float angle = ((float)/*Math.toDegrees( */controller.getCarNodeOrientation(null) );//);
+		System.out.println(angle);
 		Driver driver;
 		if(controller.detectCollision()){
 			driver = new SimpleReverse();
-		} else if(Math.abs(angle) <= 120){
+		} else if(java.lang.Math.abs(angle) <= 90){
+			// Detect collisions and grass edges
 			driver = new FrontAlign_Forward();
 			
 		} else {
@@ -22,13 +25,14 @@ public abstract class Driver {
 			/*
 			if(space >= UTurn.SIDE_SPACE_REQ){
 				driver = new UTurn();
-			} else if (space >= ThreePointTurn.SIDE_SPACE_REQ){
-				driver = new ThreePointTurn();
+//			} else if (space >= ThreePointTurn.SIDE_SPACE_REQ){
+//				driver = new ThreePointTurn();
 			}
 			*/
 		}
 		System.out.println(driver.toString());
 		controller.newDriver(driver);
+		return driver;
 		
 	}
 		

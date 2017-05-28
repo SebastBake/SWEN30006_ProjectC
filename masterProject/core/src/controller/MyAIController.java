@@ -60,7 +60,7 @@ public class MyAIController extends CarController{
 			pathList.remove(0);
 		}
 		
-		if(previousDriver.isDone(this)){
+		if(currentDriver.isDone(this)){
 			previousDriver.changeBehavior(this);
 		}
 		
@@ -113,14 +113,47 @@ public class MyAIController extends CarController{
 			toNode = pathList.getFirst();
 		
 		}
+		Coordinate currentCoordinate = new Coordinate(getPosition());
+		Coordinate toCoordinate = toNode.getCoordinate();
+		float angleBetween = 0;
+		float carToWest = getAngle();
+		float toNodeAngle = (float) Math.toDegrees(Math.atan((float)(toCoordinate.y - currentCoordinate.y)/(float)(toCoordinate.x - currentCoordinate.x)));
+		if(toCoordinate.y > currentCoordinate.y){
+			if(toNodeAngle < 0){
+				toNodeAngle = 180 + toNodeAngle;
+			}
+		}else if(toCoordinate.y < currentCoordinate.y){
+			if(toNodeAngle > 0){
+				toNodeAngle = 180 + toNodeAngle;
+			} else {
+				toNodeAngle = 360 + toNodeAngle;
+			} 
+		}else{
+			if(toCoordinate.x > currentCoordinate.x){
+				toNodeAngle = 180;
+			}else{
+				toNodeAngle = 0;
+			}
+		}
+		if(toNodeAngle < 0){
+			toNodeAngle = 360 + toNodeAngle;
+			
+		}
+		angleBetween = carToWest - toNodeAngle;
+		if(Math.abs(carToWest - toNodeAngle) > 180){
+			if(carToWest - toNodeAngle < 0){
+				return 360 + angleBetween;
+			}else{
+				return angleBetween - 360;
+			}
+		}
+		System.out.println(toNode.getCoordinate().toString() + " : " + angleBetween);
+		return angleBetween;
+		// Aidan's solution
+//		double nodeAngle = Math.atan2(toNode.getCoordinate().x, toNode.getCoordinate().y);
+//		double magnitudeNode = Math.sqrt(Math.pow(toNode.getCoordinate().x, 2) + Math.pow(toNode.getCoordinate().y, 2));
+//		return (float)Math.acos((toNode.getCoordinate().x - currentLoc.x) / (magnitudeNode * Math.sin(nodeAngle)));
 		
-		float xDist = toNode.getCoordinate().x - currentLoc.x;
-		float yDist = toNode.getCoordinate().y - currentLoc.y;
-		
-		float angle = (float) ((float) carAngle - Math.toDegrees(Math.atan2( yDist, xDist )));
-		
-		System.out.println(toNode.getCoordinate().toString() + " : " + angle);
-		return angle;
 	}
 	
 	/**
