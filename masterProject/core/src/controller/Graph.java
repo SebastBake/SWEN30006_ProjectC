@@ -12,7 +12,7 @@ public class Graph {
 	
 	// change made
 	// add a final boolean attribute to avoid magic booleans
-	private static final boolean EXPLORED = true;
+	private static final boolean UNEXPLORED = true;
 	
 	private HashMap<Coordinate, Node> nodeMap;
 	private CostStrategy coster;
@@ -197,7 +197,7 @@ public class Graph {
 			}
 			
 			// create new useful explored nodes
-			if(isUseful(viewedCoordinate)){ addNode(viewedCoordinate, EXPLORED); }
+			if(isUseful(viewedCoordinate)){ addNode(viewedCoordinate, !UNEXPLORED); }
 		}
 		
 	}
@@ -226,7 +226,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
-			addNode(helper, !EXPLORED);
+			addNode(helper, UNEXPLORED);
 		}
 		
 		// check NORTH
@@ -238,7 +238,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
-			addNode(helper, !EXPLORED);
+			addNode(helper, UNEXPLORED);
 		}
 		
 		// check WEST
@@ -250,7 +250,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
-			addNode(helper, !EXPLORED);
+			addNode(helper, UNEXPLORED);
 		}
 		
 		// check SOUTH
@@ -262,7 +262,7 @@ public class Graph {
 			if (previousViews.containsKey(helper)) { continue; } 	// ensure node is unexplored
 			if (nodeMap.containsKey(helper)) { continue; }			// ensure node is not in graph
 			if (walledPath(currentPos, helper)) { continue; }		// ensure node is accessible
-			addNode(helper, !EXPLORED);
+			addNode(helper, UNEXPLORED);
 		}
 
 	}
