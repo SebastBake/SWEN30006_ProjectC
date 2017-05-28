@@ -70,10 +70,6 @@ public class Graph {
 		
 		printGraph();
 		
-		for (Object key: nodeMap.keySet())  {
-			
-			nodeMap.get(key).setCost(Float.MAX_VALUE);
-		}
 		
 		return path;
 	}
@@ -94,6 +90,11 @@ public class Graph {
 		Node visitor = null;
 		Node visiting = null;
 		float visitCost = 0;
+		
+		for (Object key: nodeMap.keySet())  {
+			nodeMap.get(key).setStarter(false);
+			nodeMap.get(key).setCost(Float.MAX_VALUE);
+		}
 		
 		// Add and cost nearby starter nodes
 		for (Node closeNode : closeNodes) {

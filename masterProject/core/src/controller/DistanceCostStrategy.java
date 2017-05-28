@@ -21,16 +21,16 @@ public class DistanceCostStrategy implements CostStrategy {
 	@Override
 	public float travelCost(Coordinate from, Node toNode, float carAngle) {
 		
-		float angle = (float) Math.abs(
-									Math.abs(carAngle) - Math.abs(Math.atan2(
-													from.y-toNode.getCoordinate().y, 
-													from.x-toNode.getCoordinate().x)));
-		Coordinate node2 = toNode.getCoordinate();
 		
-		float xDist = Math.max(from.x, node2.x) - Math.min(from.x, node2.x);
-		float yDist = Math.max(from.y, node2.y) - Math.min(from.y, node2.y);
+		float xDist = toNode.getCoordinate().x - from.x;
+		float yDist = toNode.getCoordinate().y - from.y;
 		
-		double distance = Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+		float angle = (float) Math.abs( Math.abs(carAngle) - Math.abs(Math.toDegrees(Math.atan2( yDist, xDist ))));
+		double distance = Math.hypot(yDist, xDist);
+		
+		System.out.println("From" + " : " + from.toString());
+		System.out.println("To" + " : " + toNode.getCoordinate().toString());
+		System.out.println("carAngle" + " : " + carAngle);
 		System.out.println(toNode.getCoordinate().toString() + " : " + angle);
 		return (float)distance*angle;
 	}

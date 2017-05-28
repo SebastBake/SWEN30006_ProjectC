@@ -90,7 +90,7 @@ public class MyAIController extends CarController{
 	 * Update currentTile
 	 */
 	private void updateAngle(){
-		carAngle = (float) Math.atan2(getRawVelocity().y, getRawVelocity().x);
+		carAngle = (float) Math.toDegrees(Math.atan2(getRawVelocity().y, getRawVelocity().x));
 	}
 	
 	/**
@@ -114,9 +114,11 @@ public class MyAIController extends CarController{
 		
 		}
 		
-		float angle = (float) ((float) carAngle - Math.atan2(
-								currentLoc.y-toNode.getCoordinate().y, 
-								currentLoc.x-toNode.getCoordinate().x ));
+		float xDist = toNode.getCoordinate().x - currentLoc.x;
+		float yDist = toNode.getCoordinate().y - currentLoc.y;
+		
+		float angle = (float) ((float) carAngle - Math.toDegrees(Math.atan2( yDist, xDist )));
+		
 		System.out.println(toNode.getCoordinate().toString() + " : " + angle);
 		return angle;
 	}
