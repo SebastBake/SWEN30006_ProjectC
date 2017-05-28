@@ -2,6 +2,9 @@ package controller;
 
 import utilities.Coordinate;
 
+/**
+ * calculate cost based on the distance between nodes
+ */
 public class DistanceCostStrategy implements CostStrategy {
 
 	@Override
