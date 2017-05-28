@@ -22,13 +22,13 @@ public abstract class Driver {
 			
 			float space = controller.getMaxSideSpace();
 			driver = new RearAlign_Reverse();
-			/*
+			
 			if(space >= UTurn.SIDE_SPACE_REQ){
 				driver = new UTurn();
-//			} else if (space >= ThreePointTurn.SIDE_SPACE_REQ){
-//				driver = new ThreePointTurn();
+			} else if (space >= ThreePointTurn.SIDE_SPACE_REQ){
+				driver = new ThreePointTurn();
 			}
-			*/
+			
 		}
 		System.out.println(driver.toString());
 		controller.newDriver(driver);
