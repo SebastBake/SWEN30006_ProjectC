@@ -1,12 +1,10 @@
 package controller;
 
-import java.util.ArrayList;
-
-import tiles.MapTile;
-
 public class Edge {
 	
-	private ArrayList<MapTile> tiles;
+	// change made 
+	// remove the attribute ArrayList<MapTile> tiles
+	
 	private float angle;
 	private float length;
 	private Node node1;
