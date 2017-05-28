@@ -30,9 +30,9 @@ public class TrapDistanceCostStrategy extends CompositeCostStrategy {
 		return distanceCost/BIG_NUMBER + trapCost;
 	}
 
-	@Override
-	public float travelCost(Coordinate from, Node toNode) {
-		return this.travelCost(new Node(from, false), toNode);
-	}
+//	@Override
+//	public float travelCost(Coordinate from, Node toNode) {
+//		return this.travelCost(new Node(from, false), toNode);
+//	}
 
 }
