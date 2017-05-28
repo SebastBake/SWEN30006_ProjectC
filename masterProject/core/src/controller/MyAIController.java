@@ -3,6 +3,8 @@ package controller;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.badlogic.gdx.Gdx;
+
 import tiles.GrassTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
