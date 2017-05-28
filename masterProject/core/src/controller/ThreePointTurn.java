@@ -15,7 +15,12 @@ public class ThreePointTurn extends Driver {
 	
 	// change made
 	// an attribute to store the previous Direction
-	private WorldSpatial.Direction previousDirection;
+	private WorldSpatial.Direction previousDirection = null;
+	
+	// three locations stand for 3 points in 3-point turn
+	private Coordinate firstLocation = null;
+	private Coordinate secondLocation = null;
+	private Coordinate thirdLocation = null;
 
 	@Override
 	public void behave(MyAIController controller, float delta) {
@@ -28,11 +33,6 @@ public class ThreePointTurn extends Driver {
 		
 		// the first time it makes a turn
 		boolean isTurnLeft = true;
-		
-		// three locations stand for 3 points in 3-point turn
-		Coordinate firstLocation = null;
-		Coordinate secondLocation = null;
-		Coordinate thirdLocation = null;
 		
 		if(firstLocation == null){
 			firstLocation = new Coordinate(controller.getPosition());
