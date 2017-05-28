@@ -16,6 +16,7 @@ public class MyAIController extends CarController{
 	public LinkedList<Node> pathList = new LinkedList<Node>();
 	private Driver currentDriver;
 	private Driver previousDriver;
+	private float carAngle;
 	public Coordinate currentLoc;
 	private Coordinate previousLoc;
 	private HashMap<Coordinate, MapTile> currentView;
@@ -24,6 +25,7 @@ public class MyAIController extends CarController{
 	public MyAIController(Car car) {
 		super(car);
 		
+		carAngle = (float) Math.atan2(getRawVelocity().y, getRawVelocity().x);
 		currentLoc = new Coordinate(getPosition());
 		previousLoc = currentLoc;
 		
@@ -33,7 +35,7 @@ public class MyAIController extends CarController{
 		
 		graph = new Graph();
 		graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
-		pathList = graph.getPathList(new Coordinate(getPosition()));
+		pathList = graph.getPathList(new Coordinate(getPosition()), carAngle);
 		
 		currentDriver = new FrontAlign_Forward();
 		previousDriver = currentDriver;
@@ -44,11 +46,12 @@ public class MyAIController extends CarController{
 	@Override
 	public void update(float delta) {
 		updateLocation();
+		updateAngle();
 		
 		if(!previousLoc.equals(currentLoc)){
 			updateViews();
 			graph.updateGraph(new Coordinate(getPosition()), currentView, previousViews);
-			pathList = graph.getPathList(new Coordinate(getPosition()));
+			pathList = graph.getPathList(new Coordinate(getPosition()), carAngle);
 			System.out.println("nextNode: " + pathList.getFirst().getCoordinate().toString());
 			
 		}
@@ -84,6 +87,13 @@ public class MyAIController extends CarController{
 	}
 	
 	/**
+	 * Update currentTile
+	 */
+	private void updateAngle(){
+		carAngle = (float) Math.atan2(getRawVelocity().y, getRawVelocity().x);
+	}
+	
+	/**
 	 * Update currentView and previousViews
 	 */
 	private void updateViews(){
@@ -98,65 +108,18 @@ public class MyAIController extends CarController{
 	 * 
 	 * @return the angle of the current Node and the destination Node
 	 */
-	public float getCarNodeOrientation(Node destNode){
-		if(destNode == null){
-			destNode = pathList.getFirst();
-		}
-		Coordinate currentCoordinate = new Coordinate(getPosition());
-		Coordinate destCoordinate = destNode.getCoordinate();
-		WorldSpatial.Direction direction = getOrientation();
-		float degree = (float) Math.toDegrees((float) Math.atan((float)(destCoordinate.y - currentCoordinate.y)/(float)(destCoordinate.x - currentCoordinate.x)));
-		if(degree == -90){
-			return 120;
-		}
-		if(degree == 90){
-			return 0;
-		}
-		switch(direction){
-		case NORTH:
-			if(destCoordinate.y < currentCoordinate.y){
-				if(degree > 0){
-					return -180 + degree;
-				} else {
-					return 180 + degree;
-				}	
-			} else {
-				return degree;
-			}
-		case SOUTH:
-			if(destCoordinate.y > currentCoordinate.y){
-				if(degree > 0){
-					return -180 + degree;
-				} else {
-					return 180 + degree;
-				}	
-			} else {
-				return degree;
-			}
-		case WEST:
-			if(destCoordinate.x > currentCoordinate.x){
-				if(degree > 0){
-					return -180 + degree;
-				} else {
-					return 180 + degree;
-				}	
-			} else {
-				return degree;
-			}
-		case EAST:
-			if(destCoordinate.x < currentCoordinate.x){
-				if(degree > 0){
-					return -180 + degree;
-				} else {
-					return 180 + degree;
-				}	
-			} else {
-				return degree;
-			}
+	public float getCarNodeOrientation(Node toNode){
+		if(toNode == null){
+			toNode = pathList.getFirst();
 		
-			
 		}
-		return degree;
+		
+		float angle = (float) Math.abs(
+				carAngle - Math.atan2(
+								currentLoc.y-toNode.getCoordinate().y, 
+								currentLoc.x-toNode.getCoordinate().x));
+		
+		return angle;
 	}
 	
 	/**

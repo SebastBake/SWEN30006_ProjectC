@@ -57,9 +57,9 @@ public class Graph {
 	 * @param Coordinate: current position
 	 * @return a linked list of nodes
 	 */
-	public LinkedList<Node> getPathList(Coordinate currentPos){
+	public LinkedList<Node> getPathList(Coordinate currentPos, float carAngle){
 
-		Node next = generateBestDestination(currentPos);
+		Node next = generateBestDestination(currentPos, carAngle);
 		LinkedList<Node> path = new LinkedList<Node>();
 		path.push(next);
 		
@@ -86,7 +86,7 @@ public class Graph {
 	 * @param current position
 	 * @return the best destination
 	 */
-	private Node generateBestDestination(Coordinate currentPos){
+	private Node generateBestDestination(Coordinate currentPos, float carAngle){
 		
 		LinkedList<Node> visitQueue = new LinkedList<Node>();
 		ArrayList<Node> closeNodes = getNodesInRadius(4, currentPos);
@@ -98,7 +98,7 @@ public class Graph {
 		// Add and cost nearby starter nodes
 		for (Node closeNode : closeNodes) {
 			if (!walledPath(currentPos, closeNode.getCoordinate())) {
-				closeNode.setCost( coster.travelCost(currentPos, closeNode) );
+				closeNode.setCost( coster.travelCost(currentPos, closeNode, carAngle) );
 				closeNode.setStarter(true);
 				visitQueue.add(closeNode);
 			}
@@ -115,7 +115,7 @@ public class Graph {
 				// visit each feasible node where the cost can be lowered
 				visiting = e.getPartner(visitor);
 				if (feasibleVisit(visitor, visiting)) {
-					visitCost = coster.travelCost(visitor, visiting);
+					visitCost = coster.travelCost(visitor, visiting, carAngle);
 					if ( visiting.getCost() > visitCost) {
 						
 						//visiting - set new cost and add new node to the queue
