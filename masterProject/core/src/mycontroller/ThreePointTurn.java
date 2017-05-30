@@ -1,4 +1,4 @@
-package controller;
+package mycontroller;
 
 import utilities.Coordinate;
 import world.World;

@@ -1,4 +1,4 @@
-package controller;
+package mycontroller;
 
 import utilities.Coordinate;
 
@@ -31,10 +31,10 @@ public class DistanceCostStrategy implements CostStrategy {
 		float angle = (float) Math.abs( Math.abs(carAngle) - Math.abs(Math.toDegrees(Math.atan2( yDist, xDist ))));
 		double distance = Math.hypot(yDist, xDist);
 		
-		System.out.println("From" + " : " + from.toString());
-		System.out.println("To" + " : " + toNode.getCoordinate().toString());
-		System.out.println("carAngle" + " : " + carAngle);
-		System.out.println(toNode.getCoordinate().toString() + " : " + angle);
+		//System.out.println("From" + " : " + from.toString());
+		//System.out.println("To" + " : " + toNode.getCoordinate().toString());
+		//System.out.println("carAngle" + " : " + carAngle);
+		//System.out.println(toNode.getCoordinate().toString() + " : " + angle);
 		return (float)distance*angle;
 	}
 

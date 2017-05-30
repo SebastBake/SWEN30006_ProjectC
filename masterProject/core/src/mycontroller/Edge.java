@@ -1,4 +1,4 @@
-package controller;
+package mycontroller;
 
 /**
  * Represents Edges in the graph
